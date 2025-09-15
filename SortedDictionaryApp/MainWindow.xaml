@@ -4,9 +4,113 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SortedDictionaryApp"
+        xmlns:ctrls="clr-namespace:SortedDictionaryApp.Views" 
+        xmlns:classes="clr-namespace:StaffManager.Classes;assembly=StaffManager" 
+        d:DataContext="{d:DesignInstance Type=classes:SortedDictionaryManager}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Title="MainWindow" Height="768" Width="1360">
 
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width=".3*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        
+        <!--    Left side content (Keyboard shortcuts)    -->
+        <Grid Grid.Column="0" Background="#DFEEF1">
+            <StackPanel Orientation="Vertical" Margin="10">
+                <!--    Section Title   -->
+                <TextBlock Text="Keyboard Shortcuts" FontSize="18" FontWeight="Bold" />
+
+                <!--    Section Subtitle   -->
+                <TextBlock Text="General Shortcuts:" FontSize="14" FontWeight="SemiBold"
+                           Margin="0,10,0,0" TextDecorations="Underline" />
+
+                <!--    Table for displaying the shortcuts-->
+                <ctrls:GeneralShortcuts Margin="0,10,0,0" />
+
+                <TextBlock Text="Admin Shortcuts:" FontSize="14" FontWeight="SemiBold"
+                           Margin="0,20,0,0" TextDecorations="Underline" />
+
+                <ctrls:AdminShortcuts Margin="0,10,0,0" />
+            </StackPanel>
+        </Grid>
+        
+        <!--    Main Display area   -->
+        <Grid Margin="5" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!--    Version Details     -->
+            <TextBlock Grid.Row="2" Text="Version: 1.0.1" VerticalAlignment="Bottom"
+                       FontSize="8" HorizontalAlignment="Right" Padding="5" />
+            
+            <!--    Admin Window Toggle     -->
+            <Button Grid.Row="2" Content="Admin" HorizontalAlignment="Left"
+                    Margin="5" />
+
+            <!--    Search Pannel   -->
+            <Grid Grid.Row="0" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                
+                <!--    Search Field    -->
+                <TextBox x:Name="StaffNameTextBox" Grid.Column="0" Grid.Row="1"
+                         Margin="5" Text="{Binding SearchTerm}" />
+                
+                <!--    Search Button   -->
+                <Button Content="Search" Margin="5" Grid.Column="1" Grid.Row="1"
+                        Padding="5" Command="{Binding SearchForStaffMemberCommand}" />
+                
+                <!--    Section Title   -->
+                <TextBlock Text="Search / Filter Data" Grid.Column="0" Grid.Row="0" FontSize="12" Margin="5" />
+            </Grid>
+            
+            <!--    Display Fields  -->
+            <Grid Grid.Row="1" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                
+                <!--    Left Side Content       -->
+                <TextBlock Text="Staff Contact List" FontSize="18" FontWeight="Bold"
+                           Padding="5" Grid.Column="0" Grid.Row="0"  />
+
+                <ListBox Grid.Row="1" Grid.Column="0" Margin="5" 
+                         IsEnabled="False" ItemsSource="{Binding MasterFile}" />
+                
+                <!--    Right Side Content      -->
+                <TextBlock Text="Filtered Staff List" FontSize="18" FontWeight="Bold"
+                           Padding="5" Grid.Column="1" Grid.Row="0"  />
+
+                <ListBox x:Name="FilteredStaffListBox" Grid.Row="1" Grid.Column="1" Margin="5"
+                         ItemsSource="{Binding StaffMembers}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Id}" />
+                                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

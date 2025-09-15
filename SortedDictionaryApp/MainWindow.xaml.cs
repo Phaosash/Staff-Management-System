@@ -1,24 +1,16 @@
-﻿using System.Text;
+﻿using StaffManager.Classes;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace SortedDictionaryApp
-{
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
-    {
-        public MainWindow()
-        {
-            InitializeComponent();
-        }
+namespace SortedDictionaryApp;
+
+public partial class MainWindow : Window {
+    private readonly SortedDictionaryManager _dContext;
+
+    public MainWindow (){
+        InitializeComponent();
+
+        _dContext = new SortedDictionaryManager();
+
+        DataContext = _dContext;
     }
 }
