@@ -11,6 +11,9 @@ public partial class SortedDictionaryManager: ObservableObject {
     [ObservableProperty] private SortedDictionary<int, string> _masterFile;
     [ObservableProperty] private ObservableCollection<StaffMember> _staffMembers;
     [ObservableProperty] private string? _searchTerm = string.Empty;
+    [ObservableProperty] private string? _name = string.Empty;
+    [ObservableProperty] private int _idNumber;
+    [ObservableProperty] private string? _feedbackString = string.Empty;
 
     public SortedDictionaryManager (){
         _masterFile = [];
@@ -19,26 +22,11 @@ public partial class SortedDictionaryManager: ObservableObject {
         DataManager.InitialiseData(_masterFile);
     }
 
-    private bool CheckDataExists (){
-        if (MasterFile == null){
-            LoggingManager.Instance.LogWarning("MasterFile is null.");
-            MessageBox.Show("Unable to search for the staff memeber the data is missing.", "No Data Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return false;
-        }
-
-        if (string.IsNullOrEmpty(SearchTerm)){
-            LoggingManager.Instance.LogWarning("SearchTerm is null.");
-            MessageBox.Show("Unable to search for the staff member, invalid search term.", "Invalid Search Term", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return false;
-        }
-
-        return true;
-    }
-
-    [RelayCommand]
-    private void SearchForStaffMember (){
+    [RelayCommand] private void SearchForStaffMember (){
         try {
-            if (CheckDataExists()){
+            if (DataManager.CheckDataExists(MasterFile, SearchTerm!)){
+                StaffMembers.Clear();
+
                 var staffMembers = DataManager.FindStaffMember(MasterFile, SearchTerm!); 
 
                 if (staffMembers != null && staffMembers.Any()){
@@ -58,13 +46,26 @@ public partial class SortedDictionaryManager: ObservableObject {
     //  This method is used to intialise the deletion of a staff members record from the SortedDictionary.
     //  It checks to ensure that data actually exists before trying to delete it.
     [RelayCommand] private void DeleteStaffMember (){ 
-        if (CheckDataExists()){
+        if (DataManager.CheckDataExists(MasterFile, SearchTerm!)){
             DataManager.DeleteEntryViaKey(MasterFile, SearchTerm!);
         }
     }
 
-    [RelayCommand] private void AddStaffMember (){ 
-        
+    [RelayCommand] private void CreateStaffMember (){ 
+        if (DataManager.ValidateStaffCreationFields(IdNumber, Name!)){
+            var tempUser = new StaffMember();
+
+            tempUser.Name = Name!;
+            tempUser.Id = IdNumber;
+
+            MasterFile.Add(tempUser.Id, tempUser.Name);
+            StaffMembers.Add(tempUser);
+
+            FeedbackString = "Successfully added the new staff member";
+            LoggingManager.Instance.LogInformation($"Successfully add a new staff member ID: {tempUser.Id} Name: {tempUser.Name}");
+        } else {
+            FeedbackString = "Failed to add the new staff member.";
+        }
     }
 
     //  This method is used to initialise the saving of any changes to the data back into the .csv file. If no data is found then it returns early as there

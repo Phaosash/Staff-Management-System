@@ -41,17 +41,6 @@ internal class DataManager {
         }
     }
 
-    public static void AddNewStaffMemeber (IDictionary<int, string> keyValuePairs, StaffMember staffMember){
-        try {
-            keyValuePairs.Add(staffMember.Id, staffMember.Name);
-            LoggingManager.Instance.LogInformation($"Successfully added the staff member record for ID: {staffMember.Id}");
-            MessageBox.Show($"Successfully added the record for ID: {staffMember.Id}.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-        } catch (Exception ex){
-            LoggingManager.Instance.LogError(ex, "Failed to add the staff member.");
-            MessageBox.Show("Encountered an unexpected problem trying to add the record, please try again.", "Data Creation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-        }
-    }
-
     public static ObservableCollection<StaffMember> FindStaffMember (IDictionary<int, string> dictionary, string searchQuery){
         var matchingStaffMembers = new ObservableCollection<StaffMember>();
 
@@ -80,5 +69,39 @@ internal class DataManager {
             LoggingManager.Instance.LogError(ex, "Failed to find a valid staff member in the dictionary.");
             return [];
         }
+    }
+
+    private static bool CheckStartingNumbers (int number){
+        return number.ToString().StartsWith("77");
+    }
+
+    public static bool ValidateStaffCreationFields (int id, string name){
+        if (CheckStartingNumbers(id)){
+            LoggingManager.Instance.LogWarning("An invalid ID number was eneted for the new staff memeber.");
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(name)){
+            LoggingManager.Instance.LogWarning("An invalid string Name was eneted for the new staff memeber.");
+            return false;
+        }
+
+        return true;
+    }
+
+    public static bool CheckDataExists (IDictionary<int, string> dictionary, string searchTarget){
+        if (dictionary == null){
+            LoggingManager.Instance.LogWarning("MasterFile is null.");
+            MessageBox.Show("Unable to search for the staff memeber the data is missing.", "No Data Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        if (string.IsNullOrEmpty(searchTarget)){
+            LoggingManager.Instance.LogWarning("SearchTerm is null.");
+            MessageBox.Show("Unable to search for the staff member, invalid search term.", "Invalid Search Term", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return false;
+        }
+
+        return true;
     }
 }
