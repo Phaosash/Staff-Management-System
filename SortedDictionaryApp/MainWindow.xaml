@@ -93,13 +93,14 @@
                            Padding="5" Grid.Column="0" Grid.Row="0"  />
 
                 <ListBox Grid.Row="1" Grid.Column="0" Margin="5" 
-                         IsEnabled="False" ItemsSource="{Binding MasterFile}" />
+                         IsEnabled="False"
+                         ItemsSource="{Binding MasterFile}"/>
                 
                 <!--    Right Side Content      -->
                 <TextBlock Text="Filtered Staff List" FontSize="18" FontWeight="Bold"
                            Padding="5" Grid.Column="1" Grid.Row="0"  />
 
-                <ListBox x:Name="FilteredStaffListBox" Grid.Row="1" Grid.Column="1" Margin="5"
+                <ListBox Grid.Row="1" Grid.Column="1" Margin="5"
                          ItemsSource="{Binding StaffMembers}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>

@@ -8,7 +8,7 @@ using System.Windows;
 namespace StaffManager.Classes;
 
 public partial class SortedDictionaryManager: ObservableObject {
-    [ObservableProperty] private SortedDictionary<int, string> _masterFile;
+    public static SortedDictionary<int, string> MasterFile = [];
     [ObservableProperty] private ObservableCollection<StaffMember> _staffMembers;
     [ObservableProperty] private string? _searchTerm = string.Empty;
     [ObservableProperty] private string? _name = string.Empty;
@@ -16,10 +16,9 @@ public partial class SortedDictionaryManager: ObservableObject {
     [ObservableProperty] private string? _feedbackString = string.Empty;
 
     public SortedDictionaryManager (){
-        _masterFile = [];
         _staffMembers = [];
 
-        DataManager.InitialiseData(_masterFile);
+        DataManager.InitialiseData(MasterFile);
     }
 
     [RelayCommand] private void SearchForStaffMember (){
