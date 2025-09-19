@@ -10,6 +10,13 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="768" Width="1360">
 
+    <Window.InputBindings>
+        <KeyBinding Key="I" Modifiers="Alt" Command="{Binding ClearIdCommand}" />
+        <KeyBinding Key="N" Modifiers="Alt" Command="{Binding ClearNameCommand}" />
+        <KeyBinding Key="A" Modifiers="Alt" Command="{Binding OpenNewWindowCommand}" />
+        <KeyBinding Key="L" Modifiers="Alt" Command="{Binding CloseApplicationCommand}" />
+    </Window.InputBindings>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.33*" />
@@ -17,7 +24,7 @@
         </Grid.ColumnDefinitions>
         
         <!--    Left side content (Keyboard shortcuts)    -->
-        <Grid Grid.Column="0" Margin="5" Background="#DFEEF1">
+        <Grid Grid.Column="0" Background="#DFEEF1">
             <StackPanel Orientation="Vertical" Margin="10">
                 <!--    Section Title   -->
                 <TextBlock Text="Keyboard Shortcuts" FontSize="18" FontWeight="Bold" />
@@ -28,11 +35,6 @@
 
                 <!--    Table for displaying the shortcuts-->
                 <ctrls:GeneralShortcuts Margin="0,10,0,0" />
-
-                <TextBlock Text="Admin Shortcuts:" FontSize="14" FontWeight="SemiBold"
-                           Margin="0,20,0,0" TextDecorations="Underline" />
-
-                <ctrls:AdminShortcuts Margin="0,10,0,0" />
             </StackPanel>
         </Grid>
         
@@ -75,21 +77,25 @@
 
                 <!--    Search Field    -->
                 <TextBox Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                         Grid.Row="1" />
+                         Grid.Row="1" KeyboardNavigation.TabIndex="0" />
                
                 <!--    ID Fields   -->
                 <TextBlock Text="ID Number" Margin="0,20,0,0" Grid.Row="2"
                            FontSize="14" FontWeight="SemiBold" />
 
                 <!--    Staff ID TextBox    -->
-                <TextBox Grid.Row="3" Text="{Binding SelectedStaffMemeber.Id}" />
+                <TextBox Grid.Row="3" Text="{Binding SelectedStaffMemeber.Id, TargetNullValue='', FallbackValue='', UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                         classes:FocusBehavior.IsFocused="{Binding ShouldFocusIdTextBox}"
+                         KeyboardNavigation.TabIndex="2" />
 
                 <!--    Name Fields  -->
                 <TextBlock Text="Name" Margin="0,20,0,0" Grid.Row="4"
-                           FontSize="14" FontWeight="SemiBold"/>
+                           FontSize="14" FontWeight="SemiBold" />
 
                 <!--    Staff Name TextBox  -->
-                <TextBox Grid.Row="5" Text="{Binding SelectedStaffMemeber.Name}" />
+                <TextBox Grid.Row="5" Text="{Binding SelectedStaffMemeber.Name, TargetNullValue='', FallbackValue='', UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                         classes:FocusBehavior.IsFocused="{Binding ShouldFocusNameTextBox}"
+                         KeyboardNavigation.TabIndex="3" />
             </Grid>
 
             <!--    Fourth Column Content   -->
@@ -115,8 +121,10 @@
                 <TextBlock Text="Filtered Staff List" FontSize="18" FontWeight="Bold"
                            Padding="5" Grid.Column="1" Grid.Row="0"  />
 
-                <ListBox x:Name="FilteredStaffListBox" Grid.Row="1" Grid.Column="1" Margin="5"
-                         ItemsSource="{Binding StaffMembers}">
+                <ListBox ItemsSource="{Binding StaffMembers}" Grid.Row="1"
+                         SelectedItem="{Binding SelectedStaffMemeber}"
+                         KeyboardNavigation.TabNavigation="Cycle"
+                         KeyboardNavigation.TabIndex="1">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">

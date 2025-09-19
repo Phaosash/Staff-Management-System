@@ -1,5 +1,6 @@
 ﻿using ErrorLogging;
 using Microsoft.Extensions.DependencyInjection;
+using SortedDictionaryApp.Views;
 using StaffManager.Classes;
 using System.Windows;
 
@@ -32,6 +33,7 @@ public partial class App : Application {
         try {
             services.AddSingleton<MainWindow>();
             services.AddSingleton<SortedDictionaryManager>();
+            services.AddTransient<AdminPanel>();
         } catch (Exception ex){
             LoggingManager.Instance.LogError(ex, "Failed to ConfigureServices!");
         }
