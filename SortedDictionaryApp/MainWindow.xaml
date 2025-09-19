@@ -65,13 +65,9 @@
                 </Grid.RowDefinitions>
                 
                 <!--    Search Field    -->
-                <TextBox x:Name="StaffNameTextBox" Grid.Column="0" Grid.Row="1"
-                         Margin="5" Text="{Binding SearchTerm}" />
-                
-                <!--    Search Button   -->
-                <Button Content="Search" Margin="5" Grid.Column="1" Grid.Row="1"
-                        Padding="5" Command="{Binding SearchForStaffMemberCommand}" />
-                
+                <TextBox x:Name="StaffNameTextBox" Grid.Column="0" Grid.Row="1" Margin="5" 
+                         Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+
                 <!--    Section Title   -->
                 <TextBlock Text="Search / Filter Data" Grid.Column="0" Grid.Row="0" FontSize="12" Margin="5" />
             </Grid>
@@ -99,13 +95,14 @@
                 <TextBlock Text="Filtered Staff List" FontSize="18" FontWeight="Bold"
                            Padding="5" Grid.Column="1" Grid.Row="0"  />
 
-                <ListBox x:Name="FilteredStaffListBox" Grid.Row="1" Grid.Column="1" Margin="5"
-                         ItemsSource="{Binding StaffMembers}">
+                <ListBox ItemsSource="{Binding StaffMembers}"
+                         Grid.Row="1" Grid.Column="1" Margin="5">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Id}" />
-                                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" />
+                                <TextBlock Text="{Binding Id}" FontWeight="Bold" Margin="0,0,5,0" />
+                                <TextBlock Text=": " />
+                                <TextBlock Text="{Binding Name}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
