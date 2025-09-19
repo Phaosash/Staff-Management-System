@@ -3,6 +3,7 @@ using System.Windows.Controls;
 
 namespace StaffManager.Classes;
 
+//  This class is used for setting and clearing the focus of the different list boxes in the different UI's
 public static class FocusBehavior {
     public static readonly DependencyProperty IsFocusedProperty = DependencyProperty.RegisterAttached("IsFocused", typeof(bool), typeof(FocusBehavior),
         new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnIsFocusedChanged));
