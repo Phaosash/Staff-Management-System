@@ -10,6 +10,7 @@ public partial class SortedDictionaryManager: ObservableObject {
     [ObservableProperty] private string? _searchTerm = string.Empty;
     [ObservableProperty] private string? _searchStaffName = string.Empty;
     [ObservableProperty] private int _searchStaffId;
+    [ObservableProperty] private StaffMember _selectedStaffMemeber = new();
 
     public SortedDictionaryManager (){
         DataManager.InitialiseData(_masterFile);
