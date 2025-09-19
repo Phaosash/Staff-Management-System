@@ -45,7 +45,7 @@
         <TextBlock Text="Close Admin Interface and save changes" FontSize="12"
                    Grid.Column="1" Grid.Row="1" Padding="5" TextWrapping="Wrap" />
 
-        <TextBlock Text="Cycle through input fields and buttons" FontSize="12"
+        <TextBlock Text="Cycle through input fields" FontSize="12"
                    Grid.Column="1" Grid.Row="2" Padding="5" TextWrapping="Wrap"
                    Background="#B8D3DA" />
 

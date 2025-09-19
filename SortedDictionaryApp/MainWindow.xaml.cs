@@ -6,17 +6,13 @@ using System.Windows;
 namespace SortedDictionaryApp;
 
 public partial class MainWindow : Window {
-    private readonly SortedDictionaryManager _dContext;
-
-    public MainWindow (){
+    public MainWindow (SortedDictionaryManager sortedDictionaryManager){
         InitializeComponent();
 
-        _dContext = new SortedDictionaryManager();
+        DataContext = sortedDictionaryManager;
 
-        DataContext = _dContext;
-
-        _dContext.RequestNewWindow += OnRequestNewWindow;
-        _dContext.RequestClose += () => this.Close();
+        sortedDictionaryManager.RequestNewWindow += OnRequestNewWindow;
+        sortedDictionaryManager.RequestApplicationClose += () => this.Close();
     }
 
     private void OnRequestNewWindow (){

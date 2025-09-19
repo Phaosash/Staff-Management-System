@@ -9,6 +9,7 @@ namespace StaffManager.Classes;
 public partial class SortedDictionaryManager: ObservableObject {
     public event Action? RequestNewWindow;
     public event Action? RequestClose;
+    public event Action? RequestApplicationClose;
 
     [ObservableProperty] private SortedDictionary<int, string> _masterFile = [];
     [ObservableProperty] private ObservableCollection<StaffMember> _staffMembers = [];
@@ -66,5 +67,9 @@ public partial class SortedDictionaryManager: ObservableObject {
 
     [RelayCommand] private void CloseWindow (){
         RequestClose?.Invoke();
+    }
+
+    [RelayCommand] private void CloseApplication (){
+        RequestApplicationClose?.Invoke();
     }
 }

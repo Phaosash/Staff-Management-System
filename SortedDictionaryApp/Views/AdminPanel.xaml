@@ -6,15 +6,24 @@
         xmlns:local="clr-namespace:SortedDictionaryApp.Views"
         xmlns:classes="clr-namespace:StaffManager.Classes;assembly=StaffManager" 
         d:DataContext="{d:DesignInstance Type=classes:SortedDictionaryManager}"
-        mc:Ignorable="d"
-        Title="AdminPanel" Height="450" Width="800">
+        mc:Ignorable="d" Title="Admin Interface" Height="450" Width="800"
+        WindowStyle="None" Background="Transparent" AllowsTransparency="True">
     
     <Window.InputBindings>
         <KeyBinding Key="L" Modifiers="Alt" Command="{Binding CloseWindowCommand}" />
     </Window.InputBindings>
-    
-    <Grid>
-        <TextBox Text="{Binding SelectedStaffMemeber.Id}" Margin="10" Height="16" Width="200"/>
-        <TextBox Text="{Binding SelectedStaffMemeber.Name}" Margin="500,0,0,0" Height="16" Width="200" />
-    </Grid>
+
+    <Border BorderThickness="2" BorderBrush="#4585A4">
+        <Grid Background="#F2F2F2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.33*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <!--    Creates the Admin Panels Side Bar   -->
+            <Grid Grid.Column="0" Background="#DFEEF1">
+                <local:AdminShortcuts Margin="5" />
+            </Grid>
+        </Grid>
+    </Border>
 </Window>
