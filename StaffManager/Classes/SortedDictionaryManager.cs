@@ -23,9 +23,16 @@ public partial class SortedDictionaryManager: ObservableObject {
         searchTerm = searchTerm?.Trim() ?? "";
         IEnumerable<StaffMember> filtered;
 
-        if (string.IsNullOrWhiteSpace(searchTerm)){
+        if (string.IsNullOrWhiteSpace(searchTerm))
+        {
             filtered = [];
-        }  else {
+        }
+        else if (int.TryParse(searchTerm, out _))
+        {
+            filtered = MasterFile.Where(kvp => kvp.Key.ToString().StartsWith(searchTerm)).Select(kvp => new StaffMember { Id = kvp.Key, Name = kvp.Value });
+        }
+        else
+        {
             filtered = MasterFile.Where(kvp => kvp.Value.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).Select(kvp => new StaffMember { Id = kvp.Key, Name = kvp.Value });
         }
 
