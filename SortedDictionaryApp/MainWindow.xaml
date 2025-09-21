@@ -84,7 +84,7 @@
                            FontSize="14" FontWeight="SemiBold" />
 
                 <!--    Staff ID TextBox    -->
-                <TextBox Grid.Row="3" Text="{Binding SelectedStaffMemeber.Id, TargetNullValue='', FallbackValue='', UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                <TextBox Grid.Row="3" Text="{Binding SelectedStaffId}"
                          classes:FocusBehavior.IsFocused="{Binding ShouldFocusIdTextBox}"
                          KeyboardNavigation.TabIndex="2" />
 
@@ -93,7 +93,7 @@
                            FontSize="14" FontWeight="SemiBold" />
 
                 <!--    Staff Name TextBox  -->
-                <TextBox Grid.Row="5" Text="{Binding SelectedStaffMemeber.Name, TargetNullValue='', FallbackValue='', UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"
+                <TextBox Grid.Row="5" Text="{Binding SelectedStaffName}"
                          classes:FocusBehavior.IsFocused="{Binding ShouldFocusNameTextBox}"
                          KeyboardNavigation.TabIndex="3" />
             </Grid>

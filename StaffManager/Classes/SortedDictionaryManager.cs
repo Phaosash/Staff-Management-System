@@ -19,6 +19,8 @@ public partial class SortedDictionaryManager: ObservableObject {
     [ObservableProperty] private StaffMember _selectedStaffMemeber = new();
     [ObservableProperty] private bool _shouldFocusIdTextBox;
     [ObservableProperty] private bool _shouldFocusNameTextBox;
+    [ObservableProperty] private string? _selectedStaffName = "";
+    [ObservableProperty] private int ? _selectedStaffId;
 
     public SortedDictionaryManager (){
         DataManager.InitialiseData(_masterFile);
@@ -26,6 +28,13 @@ public partial class SortedDictionaryManager: ObservableObject {
 
     partial void OnSearchTermChanged (string? value){
         FilterStaffMembers(value);
+    }
+
+    partial void OnSelectedStaffMemeberChanged (StaffMember value){
+        if (value != null){
+            SelectedStaffName = value.Name;
+            SelectedStaffId = value.Id;
+        }
     }
 
     private void FilterStaffMembers (string? searchTerm){
@@ -49,14 +58,14 @@ public partial class SortedDictionaryManager: ObservableObject {
 
     [RelayCommand] private void ClearId (){
         if (SelectedStaffMemeber != null){
-            SelectedStaffMemeber.Id = null;
+            SelectedStaffId = null;
             ShouldFocusIdTextBox = true;
         }
     }
 
     [RelayCommand] private void ClearName (){
         if (SelectedStaffMemeber != null){
-            SelectedStaffMemeber.Name = string.Empty;
+            SelectedStaffName = string.Empty;
             ShouldFocusNameTextBox = true;
         }
     }
