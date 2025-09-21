@@ -20,7 +20,7 @@ public partial class StaffData: ObservableObject {
         set => SetProperty(ref _masterFile, value);
     }
 
-    public ObservableCollection<StaffMember> StaffMemebers {
+    public ObservableCollection<StaffMember> StaffMembers {
         get => _staffMembers;
         set => SetProperty(ref _staffMembers, value);
     }
