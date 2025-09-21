@@ -27,8 +27,4 @@ public sealed class LoggingManager {
         _fileLogger.Log(LogLevel.Warning, message, null, (state, exception) => $"Warning: {state}");
     }
 
-    //  This method logs a warning message along with exception details using an internal file logger, including the exception message to provide additional context.
-    public void LogWarningWithException (Exception ex, string message){
-        _fileLogger.Log(LogLevel.Warning, message, ex, (state, exception) => $"Warning: {state}. Exception: {exception?.Message}");
-    }
 }

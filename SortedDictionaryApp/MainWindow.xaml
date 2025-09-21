@@ -10,9 +10,16 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="768" Width="1360">
 
+    <Window.InputBindings>
+        <KeyBinding Key="I" Modifiers="Alt" Command="{Binding ClearSelectedIdCommand}" />
+        <KeyBinding Key="N" Modifiers="Alt" Command="{Binding ClearSelectedNameCommand}" />
+        <KeyBinding Key="A" Modifiers="Alt" Command="{Binding OpenNewWindowCommand}" />
+        <KeyBinding Key="L" Modifiers="Alt" Command="{Binding CloseApplicationCommand}" />
+    </Window.InputBindings>
+
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width=".3*" />
+            <ColumnDefinition Width="0.33*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         
@@ -28,84 +35,90 @@
 
                 <!--    Table for displaying the shortcuts-->
                 <ctrls:GeneralShortcuts Margin="0,10,0,0" />
-
-                <TextBlock Text="Admin Shortcuts:" FontSize="14" FontWeight="SemiBold"
-                           Margin="0,20,0,0" TextDecorations="Underline" />
-
-                <ctrls:AdminShortcuts Margin="0,10,0,0" />
             </StackPanel>
         </Grid>
         
-        <!--    Main Display area   -->
-        <Grid Margin="5" Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+        <!--    Main Content Area   -->
+        <Grid Grid.Column="1" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-            <!--    Version Details     -->
-            <TextBlock Grid.Row="2" Text="Version: 1.0.1" VerticalAlignment="Bottom"
-                       FontSize="8" HorizontalAlignment="Right" Padding="5" />
-            
-            <!--    Admin Window Toggle     -->
-            <Button Grid.Row="2" Content="Admin" HorizontalAlignment="Left"
-                    Margin="5" />
-
-            <!--    Search Pannel   -->
-            <Grid Grid.Row="0" Margin="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                
-                <!--    Search Field    -->
-                <TextBox x:Name="StaffNameTextBox" Grid.Column="0" Grid.Row="1"
-                         Margin="5" Text="{Binding SearchTerm}" />
-                
-                <!--    Search Button   -->
-                <Button Content="Search" Margin="5" Grid.Column="1" Grid.Row="1"
-                        Padding="5" Command="{Binding SearchForStaffMemberCommand}" />
-                
-                <!--    Section Title   -->
-                <TextBlock Text="Search / Filter Data" Grid.Column="0" Grid.Row="0" FontSize="12" Margin="5" />
-            </Grid>
-            
-            <!--    Display Fields  -->
-            <Grid Grid.Row="1" Margin="5">
+            <!--    Second Column   -->
+            <Grid Grid.Column="0" Margin="5">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                
-                <!--    Left Side Content       -->
                 <TextBlock Text="Staff Contact List" FontSize="18" FontWeight="Bold"
-                           Padding="5" Grid.Column="0" Grid.Row="0"  />
+                           Padding="5" Grid.Row="0"  />
 
-                <ListBox Grid.Row="1" Grid.Column="0" Margin="5" 
-                         IsEnabled="False" ItemsSource="{Binding MasterFile}" />
+                <!--    Read Only List Box  -->
+                <ListBox Grid.Row="1" IsEnabled="False" ItemsSource="{Binding StaffData.MasterFile.SortedData}" />
+            </Grid>
+
+            <!--    Third Column    -->
+            <Grid Grid.Column="1" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Search / Filter Data" FontSize="18" FontWeight="Bold"
+                           Padding="5" Grid.Row="0"  />
+
+                <!--    Search Field    -->
+                <TextBox Text="{Binding StaffData.SearchTerm, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                         Grid.Row="1" KeyboardNavigation.TabIndex="0" />
+               
+                <!--    ID Fields   -->
+                <TextBlock Text="ID Number" Margin="0,20,0,0" Grid.Row="2"
+                           FontSize="14" FontWeight="SemiBold" />
+
+                <!--    Staff ID TextBox    -->
+                <TextBox Grid.Row="3" Text="{Binding StaffData.SelectedStaffId}"
+                         classes:FocusBehavior.IsFocused="{Binding StaffData.ShouldFocusIdTextBox}"
+                         KeyboardNavigation.TabIndex="2" />
+
+                <!--    Name Fields  -->
+                <TextBlock Text="Name" Margin="0,20,0,0" Grid.Row="4"
+                           FontSize="14" FontWeight="SemiBold" />
+
+                <!--    Staff Name TextBox  -->
+                <TextBox Grid.Row="5" Text="{Binding StaffData.SelectedStaffName}"
+                         classes:FocusBehavior.IsFocused="{Binding StaffData.ShouldFocusNameTextBox}"
+                         KeyboardNavigation.TabIndex="3" />
+            </Grid>
+
+            <!--    Fourth Column Content   -->
+            <Grid Grid.Column="2" Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
                 
                 <!--    Right Side Content      -->
                 <TextBlock Text="Filtered Staff List" FontSize="18" FontWeight="Bold"
-                           Padding="5" Grid.Column="1" Grid.Row="0"  />
+                           Padding="5" Grid.Row="0"  />
 
-                <ListBox x:Name="FilteredStaffListBox" Grid.Row="1" Grid.Column="1" Margin="5"
-                         ItemsSource="{Binding StaffMembers}">
+                <ListBox ItemsSource="{Binding StaffData.StaffMembers}" Grid.Row="1"
+                         SelectedItem="{Binding StaffData.SelectedStaffMember}"
+                         KeyboardNavigation.TabNavigation="Cycle"
+                         KeyboardNavigation.TabIndex="1">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Id}" />
-                                <TextBlock Text="{Binding Name}" Margin="10,0,0,0" />
+                                <TextBlock Text="{Binding Id}" FontWeight="Bold" Margin="0,0,5,0" />
+                                <TextBlock Text=": " />
+                                <TextBlock Text="{Binding Name}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

@@ -3,84 +3,103 @@ using CommunityToolkit.Mvvm.Input;
 using ErrorLogging;
 using StaffManager.DataModels;
 using System.Collections.ObjectModel;
-using System.Windows;
+using System.ComponentModel;
 
 namespace StaffManager.Classes;
 
 public partial class SortedDictionaryManager: ObservableObject {
-    [ObservableProperty] private SortedDictionary<int, string> _masterFile;
-    [ObservableProperty] private ObservableCollection<StaffMember> _staffMembers;
-    [ObservableProperty] private string? _searchTerm = string.Empty;
-    [ObservableProperty] private string? _name = string.Empty;
-    [ObservableProperty] private int _idNumber;
-    [ObservableProperty] private string? _feedbackString = string.Empty;
+    public StaffData StaffData { get; } = new StaffData();
+    public event Action? RequestNewWindow;
+    public event Action? RequestClose;
+    public event Action? RequestApplicationClose;
+
+    private enum StaffFieldToClear { Name, Id }
 
     public SortedDictionaryManager (){
-        _masterFile = [];
-        _staffMembers = [];
-
-        DataManager.InitialiseData(_masterFile);
-    }
-
-    [RelayCommand] private void SearchForStaffMember (){
         try {
-            if (DataManager.CheckDataExists(MasterFile, SearchTerm!)){
-                StaffMembers.Clear();
-
-                var staffMembers = DataManager.FindStaffMember(MasterFile, SearchTerm!); 
-
-                if (staffMembers != null && staffMembers.Any()){
-                    foreach (var staffMember in staffMembers){
-                        StaffMembers.Add(staffMember);
-                    }
-                } else {
-                    MessageBox.Show($"No recoord was found matching {SearchTerm}");
-                    LoggingManager.Instance.LogWarning($"No record was found matching the search term: {SearchTerm}, staffMembers was null");
-                }
-            }
-        } catch (Exception ex){
-            LoggingManager.Instance.LogError(ex, $"Encountered an unexpected problem while searching for a staff member, while using search term: {SearchTerm}.");
-        }
-    }
-
-    //  This method is used to intialise the deletion of a staff members record from the SortedDictionary.
-    //  It checks to ensure that data actually exists before trying to delete it.
-    [RelayCommand] private void DeleteStaffMember (){ 
-        if (DataManager.CheckDataExists(MasterFile, SearchTerm!)){
-            DataManager.DeleteEntryViaKey(MasterFile, SearchTerm!);
-        }
-    }
-
-    [RelayCommand] private void CreateStaffMember (){ 
-        if (DataManager.ValidateStaffCreationFields(IdNumber, Name!)){
-            var tempUser = new StaffMember();
-
-            tempUser.Name = Name!;
-            tempUser.Id = IdNumber;
-
-            MasterFile.Add(tempUser.Id, tempUser.Name);
-            StaffMembers.Add(tempUser);
-
-            FeedbackString = "Successfully added the new staff member";
-            LoggingManager.Instance.LogInformation($"Successfully add a new staff member ID: {tempUser.Id} Name: {tempUser.Name}");
-        } else {
-            FeedbackString = "Failed to add the new staff member.";
-        }
-    }
-
-    //  This method is used to initialise the saving of any changes to the data back into the .csv file. If no data is found then it returns early as there
-    //  will be nothing to save, and logs any issues that are encountered.
-    [RelayCommand] private void SaveDictionary (){
-        try {
-            if (MasterFile == null){
-                LoggingManager.Instance.LogWarning("MasterFile is null.");
-                MessageBox.Show("Unable to save the updated data, no data was found.", "No Data Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
+            if (StaffData.MasterFile.SortedData != null){
+                DataManager.InitialiseData(StaffData.MasterFile.SortedData);
             } else {
-                DataManager.SaveDataToCsv(MasterFile);
+                LoggingManager.Instance.LogWarning("Failed to initialise the data.");
             }
+
+            StaffData.PropertyChanged += StaffDataPropertyChanged;
         } catch (Exception ex){
-            LoggingManager.Instance.LogError(ex, "Failed to initalise saving the file to .csv something went wrong!");
+            LoggingManager.Instance.LogError(ex, "Failed to correctly initialise the SortedDictionaryManager!");
         }
     }
+
+    private void StaffDataPropertyChanged (object? sender, PropertyChangedEventArgs e){
+        switch (e.PropertyName){
+            case nameof(StaffData.SearchTerm):
+                FilterStaffMembers(StaffData.SearchTerm);
+                break;
+            case nameof(StaffData.SelectedStaffMember):
+                OnSelectedStaffMemberChanged(StaffData.SelectedStaffMember);
+                break;
+            default:
+                LoggingManager.Instance.LogWarning($"Unhandled property change: {e.PropertyName}");
+                break;
+        }
+    }
+
+    private void OnSelectedStaffMemberChanged (StaffMember? value){
+        if (value != null){
+            StaffData.SelectedStaffName = value.Name;
+            StaffData.SelectedStaffId = value.Id;
+        } else {
+            LoggingManager.Instance.LogWarning("No staff member was selected; cannot update name or ID fields.");
+        }
+    }
+
+    private void FilterStaffMembers (string? searchTerm){
+        try {
+            if (StaffData.MasterFile.SortedData == null){
+                LoggingManager.Instance.LogWarning("Filter failed: MasterFile.SortedData is null.");
+                return;
+            }
+            
+            searchTerm = searchTerm?.Trim() ?? string.Empty;
+            IEnumerable<StaffMember> filtered;
+
+            if (string.IsNullOrWhiteSpace(searchTerm)){
+                filtered = [];
+            } else if (int.TryParse(searchTerm, out _)){
+                filtered = StaffData.MasterFile.SortedData.Where(kvp => kvp.Key.ToString().StartsWith(searchTerm)).Select(kvp => new StaffMember { Id = kvp.Key, Name = kvp.Value });
+            } else {
+                filtered = StaffData.MasterFile.SortedData.Where(kvp => kvp.Value.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).Select(kvp => new StaffMember { Id = kvp.Key, Name = kvp.Value });
+            }
+
+            StaffData.StaffMembers = new ObservableCollection<StaffMember>(filtered);
+        } catch (Exception ex){
+            LoggingManager.Instance.LogError(ex, "An error occurred while filtering staff data.");
+        }
+    }
+
+    private void ClearSelectedStaffField (StaffFieldToClear fieldToClear){
+        if (StaffData.SelectedStaffMember == null){
+            LoggingManager.Instance.LogWarning("Attempted to clear staff field, but no staff member is selected.");
+            return;
+        }
+
+        switch (fieldToClear){
+            case StaffFieldToClear.Name:
+                StaffData.SelectedStaffName = string.Empty;
+                StaffData.ShouldFocusNameTextBox = true;
+                break;
+            case StaffFieldToClear.Id:
+                StaffData.SelectedStaffId = null;
+                StaffData.ShouldFocusIdTextBox = true;
+                break;
+            default:
+                LoggingManager.Instance.LogWarning($"Unexpected StaffField value: {fieldToClear}. No action taken.");
+                break;
+        }
+    }
+
+    [RelayCommand] private void ClearSelectedId () => ClearSelectedStaffField(StaffFieldToClear.Id);
+    [RelayCommand] private void ClearSelectedName () => ClearSelectedStaffField(StaffFieldToClear.Name);
+    [RelayCommand] private void OpenNewWindow () => RequestNewWindow?.Invoke();
+    [RelayCommand] private void CloseWindow () => RequestClose?.Invoke();
+    [RelayCommand] private void CloseApplication () => RequestApplicationClose?.Invoke();
 }
