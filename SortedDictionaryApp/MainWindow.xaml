@@ -57,7 +57,7 @@
                            Padding="5" Grid.Row="0"  />
 
                 <!--    Read Only List Box  -->
-                <ListBox Grid.Row="1" IsEnabled="False" ItemsSource="{Binding MasterFile}" />
+                <ListBox Grid.Row="1" IsEnabled="False" ItemsSource="{Binding StaffData.MasterFile.SortedData}" />
             </Grid>
 
             <!--    Third Column    -->
@@ -76,7 +76,7 @@
                            Padding="5" Grid.Row="0"  />
 
                 <!--    Search Field    -->
-                <TextBox Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                <TextBox Text="{Binding StaffData.SearchTerm, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
                          Grid.Row="1" KeyboardNavigation.TabIndex="0" />
                
                 <!--    ID Fields   -->
@@ -84,8 +84,8 @@
                            FontSize="14" FontWeight="SemiBold" />
 
                 <!--    Staff ID TextBox    -->
-                <TextBox Grid.Row="3" Text="{Binding SelectedStaffId}"
-                         classes:FocusBehavior.IsFocused="{Binding ShouldFocusIdTextBox}"
+                <TextBox Grid.Row="3" Text="{Binding StaffData.SelectedStaffId}"
+                         classes:FocusBehavior.IsFocused="{Binding StaffData.ShouldFocusIdTextBox}"
                          KeyboardNavigation.TabIndex="2" />
 
                 <!--    Name Fields  -->
@@ -93,8 +93,8 @@
                            FontSize="14" FontWeight="SemiBold" />
 
                 <!--    Staff Name TextBox  -->
-                <TextBox Grid.Row="5" Text="{Binding SelectedStaffName}"
-                         classes:FocusBehavior.IsFocused="{Binding ShouldFocusNameTextBox}"
+                <TextBox Grid.Row="5" Text="{Binding StaffData.SelectedStaffName}"
+                         classes:FocusBehavior.IsFocused="{Binding StaffData.ShouldFocusNameTextBox}"
                          KeyboardNavigation.TabIndex="3" />
             </Grid>
 
@@ -109,8 +109,8 @@
                 <TextBlock Text="Filtered Staff List" FontSize="18" FontWeight="Bold"
                            Padding="5" Grid.Row="0"  />
 
-                <ListBox ItemsSource="{Binding StaffMembers}" Grid.Row="1"
-                         SelectedItem="{Binding SelectedStaffMemeber}"
+                <ListBox ItemsSource="{Binding StaffData.StaffMemebers}" Grid.Row="1"
+                         SelectedItem="{Binding StaffData.SelectedStaffMember}"
                          KeyboardNavigation.TabNavigation="Cycle"
                          KeyboardNavigation.TabIndex="1">
                     <ListBox.ItemTemplate>
