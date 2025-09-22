@@ -11,6 +11,9 @@
     
     <Window.InputBindings>
         <KeyBinding Key="L" Modifiers="Alt" Command="{Binding CloseWindowCommand}" />
+        <KeyBinding Key="U" Modifiers="Alt" Command="{Binding UpdateStaffRecordCommand}" />
+        <KeyBinding Key="D" Modifiers="Alt" Command="{Binding DeleteRecordCommand}" />
+        <KeyBinding Key="A" Modifiers="Alt" Command="{Binding AddNewStaffMemberCommand}" />
     </Window.InputBindings>
 
     <Border BorderThickness="2" BorderBrush="#4585A4">
@@ -41,25 +44,64 @@
                 <!--    Window Title    -->
                 <TextBlock Text="Admin Panel" FontSize="18" FontWeight="SemiBold" 
                            Grid.Row="0" Typography.Capitals="SmallCaps" />
-
-                <!--    Status Bar Section (Bottom Row)     -->
-                <StackPanel Orientation="Horizontal" Grid.Row="2">
-                    <TextBlock Text="Status:" FontSize="12" FontWeight="SemiBold"
-                               Typography.Capitals="SmallCaps" />
-                    
-                    <TextBlock Text="???" FontSize="12" Margin="10,0,0,0"
-                               Typography.Capitals="SmallCaps" />
-                </StackPanel>
                 
+                <!--    Close Button    -->
+                <Button Content="Close" Command="{Binding CloseWindowCommand}"
+                        Padding="5" Margin="5" Grid.Row="2"
+                        HorizontalAlignment="Right"/>
+
                 <!--    Main Display Section    -->
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
+
+                    <!--    Selected Staff Details Section  -->
+                    <StackPanel Orientation="Vertical" Margin="5" Grid.Column="1">
+                        <TextBlock Text="Update / Delete" FontSize="14"
+                                   FontWeight="SemiBold" />
+
+                        <TextBlock Text="ID Number" FontSize="12" Margin="0,10,0,0" />
+
+                        <!--    ReadOnly text box for Staff ID  -->
+                        <TextBox Text="{Binding StaffData.SelectedStaffMember.Id}"
+                                 IsReadOnly="True" Margin="0,5,0,0" />
+
+                        <TextBlock Text="Name" FontSize="12" Margin="0,10,0,0" />
+
+                        <!--    Name Text Box   -->
+                        <TextBox Text="{Binding StaffData.UpdatedStaffName}"
+                                 Margin="0,5,0,0" TabIndex="0" />
+
+                        <!--    Update record button    -->
+                        <Button Content="Update Record" Margin="0,10,0,0"
+                                Padding="5" Cursor="Hand" 
+                                Command="{Binding UpdateStaffRecordCommand}" />
+                        
+                        <!--    Delete Record Button    -->
+                        <Button Content="Delete Record" Margin="0,10,0,0"
+                                Padding="5" Cursor="Hand"
+                                Command="{Binding DeleteRecordCommand}" />
+                    </StackPanel>
                     
-                    <!--    TODO:   ADD FUNCTIONALITY HERE       -->
+                    <!--    Create New Section  -->
+                    <StackPanel Orientation="Vertical" Margin="5" Grid.Column="2">
+                        <TextBlock Text="Add New Staff" FontSize="14"
+                                   FontWeight="SemiBold" />
+
+                        <TextBlock Text="Name" FontSize="12" Margin="0,10,0,0" />
+
+                        <!--    Name Text Box   -->
+                        <TextBox Text="{Binding StaffData.NewStaffName}"
+                                 Margin="0,5,0,0" TabIndex="1" />
+
+                        <Button Content="Add Staff Member" Margin="0,10,0,0"
+                                Padding="5" Cursor="Hand"
+                                Command="{Binding AddNewStaffMemberCommand}" />
+                    </StackPanel>
                 </Grid>
             </Grid>
         </Grid>
