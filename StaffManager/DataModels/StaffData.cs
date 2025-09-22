@@ -12,8 +12,9 @@ public partial class StaffData: ObservableObject {
     private StaffMember _selectedStaffMember = new();
     private bool _shouldFocusIdTextBox;
     private bool _shouldFocusNameTextBox;
-    private string? _selectedStaffName = "";
+    private string? _selectedStaffName = string.Empty;
     private int? _selectedStaffId;
+    private string? _newStaffName = string.Empty;
 
     public MasterFile MasterFile {
         get => _masterFile;
@@ -63,5 +64,10 @@ public partial class StaffData: ObservableObject {
     public int? SelectedStaffId {
         get => _selectedStaffId;
         set => SetProperty(ref _selectedStaffId, value);
+    }
+
+    public string? NewStaffName {
+        get => _newStaffName;
+        set => SetProperty(ref _newStaffName, value);
     }
 }

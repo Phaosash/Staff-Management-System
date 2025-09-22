@@ -52,10 +52,26 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
+
                     </Grid.ColumnDefinitions>
-                    
-                    <!--    TODO:   ADD FUNCTIONALITY HERE       -->
+
+                    <!--    Selected Staff Details Section  -->
+                    <StackPanel Orientation="Vertical" Margin="5" Grid.Column="0">
+                        <TextBlock Text="Update / Delete Staff Member" FontSize="14"
+                                   FontWeight="SemiBold" />
+
+                        <TextBlock Text="ID Number" FontSize="12" Margin="0,10,0,0" />
+
+                        <!--    ReadOnly text box for Staff ID  -->
+                        <TextBox Text="{Binding StaffData.SelectedStaffMember.Id}"
+                                 IsReadOnly="True" Margin="0,5,0,0" />
+
+                        <TextBlock Text="Name" FontSize="12" Margin="0,10,0,0" />
+
+                        <!--    Name Text Box   -->
+                        <TextBox Text="{Binding StaffData.SelectedStaffMember.Name}"
+                                 Margin="0,5,0,0" />
+                    </StackPanel>
                 </Grid>
             </Grid>
         </Grid>
