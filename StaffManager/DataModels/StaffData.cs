@@ -15,6 +15,7 @@ public partial class StaffData: ObservableObject {
     private string? _selectedStaffName = string.Empty;
     private int? _selectedStaffId;
     private string? _newStaffName = string.Empty;
+    private string? _updatedStaffName = string.Empty;
 
     public MasterFile MasterFile {
         get => _masterFile;
@@ -69,5 +70,10 @@ public partial class StaffData: ObservableObject {
     public string? NewStaffName {
         get => _newStaffName;
         set => SetProperty(ref _newStaffName, value);
+    }
+
+    public string? UpdatedStaffName {
+        get => _updatedStaffName;
+        set => SetProperty(ref _updatedStaffName, value);
     }
 }

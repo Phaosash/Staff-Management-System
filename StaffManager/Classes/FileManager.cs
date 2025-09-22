@@ -13,52 +13,53 @@ internal class FileManager {
     public static void LoadFromCsv (string filePath, IDictionary<int, string> dictionary){
         if (!File.Exists(filePath)){
             UserFeedback.DisplayErrorMessage($"The specified file doesn't exist in {filePath}.", "File Path Error");
-        } else {
-            try {
-                using var reader = new StreamReader(filePath);
-                var config = new CsvConfiguration(CultureInfo.InvariantCulture){ HasHeaderRecord = false, IgnoreBlankLines = true, BadDataFound = context => {
-                    if (context.Context != null){
-                        var csvContext = context.Context;
-                        int currentRow = csvContext.Parser!.Row;
-                        UserFeedback.DisplayErrorMessage($"Line {currentRow}: Bad data in CSV: {context.RawRecord}", "CSV Error");
-                    } else {
-                        UserFeedback.DisplayErrorMessage($"Bad data in CSV: {context.RawRecord}", "CSV Error");
-                    }
-                } };
+            return;
+        }
 
-                using var csv = new CsvReader(reader, config);
-
-                int lineNumber = 0;
-                while (csv.Read()){
-                    lineNumber++;
-
-                    try {
-                        var keyStr = csv.GetField(0)?.Trim();
-                        var value = csv.GetField(1)?.Trim();
-
-                        if (string.IsNullOrWhiteSpace(keyStr) || string.IsNullOrWhiteSpace(value)){
-                            UserFeedback.DisplayErrorMessage($"One or more fields are empty on Line: {lineNumber}", "CSV Value Error");
-                            continue;
-                        }
-
-                        if (!int.TryParse(keyStr, out int key)){
-                            UserFeedback.DisplayErrorMessage($"Line {lineNumber}: Invalid key '{keyStr}' — must be an integer.", "Key Value Error");
-                            continue;
-                        }
-
-                        if (dictionary.ContainsKey(key)){
-                            UserFeedback.DisplayErrorMessage($"Line {{lineNumber}}: Duplicate key found.", "Duplicate Key Value Error");
-                            continue;
-                        }
-
-                        dictionary[key] = value;
-                    } catch (Exception ex){
-                        UserFeedback.DisplayErrorMessageWithException($"Error parsing CSV on Line {lineNumber}: ", "CSV Error", ex);
-                    }
+        try {
+            using var reader = new StreamReader(filePath);
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture){ HasHeaderRecord = false, IgnoreBlankLines = true, BadDataFound = context => {
+                if (context.Context != null){
+                    var csvContext = context.Context;
+                    int currentRow = csvContext.Parser!.Row;
+                    UserFeedback.DisplayErrorMessage($"Line {currentRow}: Bad data in CSV: {context.RawRecord}", "CSV Error");
+                } else {
+                    UserFeedback.DisplayErrorMessage($"Bad data in CSV: {context.RawRecord}", "CSV Error");
                 }
-            } catch (Exception ex){
-                UserFeedback.DisplayErrorMessageWithException($"Could not read the CSV file.", "File Read Error", ex);
+            } };
+
+            using var csv = new CsvReader(reader, config);
+
+            int lineNumber = 0;
+            while (csv.Read()){
+                lineNumber++;
+
+                try {
+                    var keyStr = csv.GetField(0)?.Trim();
+                    var value = csv.GetField(1)?.Trim();
+
+                    if (string.IsNullOrWhiteSpace(keyStr) || string.IsNullOrWhiteSpace(value)){
+                        UserFeedback.DisplayErrorMessage($"One or more fields are empty on Line: {lineNumber}", "CSV Value Error");
+                        continue;
+                    }
+
+                    if (!int.TryParse(keyStr, out int key)){
+                        UserFeedback.DisplayErrorMessage($"Line {lineNumber}: Invalid key '{keyStr}' — must be an integer.", "Key Value Error");
+                        continue;
+                    }
+
+                    if (dictionary.ContainsKey(key)){
+                        UserFeedback.DisplayErrorMessage($"Line {{lineNumber}}: Duplicate key found.", "Duplicate Key Value Error");
+                        continue;
+                    }
+
+                    dictionary[key] = value;
+                } catch (Exception ex){
+                    UserFeedback.DisplayErrorMessageWithException($"Error parsing CSV on Line {lineNumber}: ", "CSV Error", ex);
+                }
             }
+        } catch (Exception ex){
+            UserFeedback.DisplayErrorMessageWithException($"Could not read the CSV file.", "File Read Error", ex);
         }
     }
 

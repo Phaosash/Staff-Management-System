@@ -1,5 +1,5 @@
-﻿using StaffManager.DataModels;
-using System.IO;
+﻿using System.IO;
+using System.Windows.Media.Effects;
 
 namespace StaffManager.Classes;
 
@@ -35,15 +35,48 @@ internal class DataManager {
     public static void AddStaffMemberToIDictionary (IDictionary<int, string> dict, string name){
         if (dict == null || name == null){
             UserFeedback.DisplayErrorMessage("Unable to add new staff member, no data was found", "No Data Error");
-        } else {
-            int newId = CreateNewStaffId(dict);
+            return;
+        } 
 
-            if (newId == -1){
-                UserFeedback.DisplayErrorMessage("Failed to generate a new unique ID", "Invalid Id Value");
+        int newId = CreateNewStaffId(dict);
+
+        if (newId == -1){
+            UserFeedback.DisplayErrorMessage("Failed to generate a new unique ID", "Invalid Id Value");
+            return;
+        }
+        
+        dict.Add(newId, name);
+        UserFeedback.DisplayInformation($"Successfully added a new user to the list with ID: {newId}." , "Successful Completion");
+    }
+
+    public static void UpdateStaffMembersName (IDictionary<int, string> keyValuePairs, int targetId, string updatedName){
+        if (keyValuePairs == null || keyValuePairs.Count <= 0 || string.IsNullOrWhiteSpace(updatedName)){
+            UserFeedback.DisplayWarning("Unable to update the staff members details, no data was found", "Missing Details");
+            return;
+        }
+
+        try {
+            if (keyValuePairs.ContainsKey(targetId)){
+                keyValuePairs[targetId] = updatedName;
+                UserFeedback.DisplayInformation($"Successfully updated the record matching ID: {targetId}", "Success");
             } else {
-                dict.Add(newId, name);
-                UserFeedback.DisplayInformation("Successfully added a new user to the list." , "Successful Completion");
+                UserFeedback.DisplayWarning($"User ID {targetId} was not found in the dictionary.", "Missing Details");
             }
+        } catch (Exception ex){
+            UserFeedback.DisplayErrorMessageWithException("Unable to update the target record, encountered an unexpected problem.", "Missing Details", ex);
+        }
+    }
+
+    public static void DeleteRecord (IDictionary<int, string> keyValuePairs, int targetId){
+        if (keyValuePairs == null){
+            UserFeedback.DisplayWarning("Unable to delete the record no data was found", "Missing Details");
+            return;
+        }
+
+        try {
+            keyValuePairs.Remove(targetId);
+        } catch (Exception ex){
+            UserFeedback.DisplayErrorMessageWithException("Unable to delete the target record.", "Missing Details", ex);
         }
     }
 }
