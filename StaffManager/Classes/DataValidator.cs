@@ -27,4 +27,12 @@ internal class DataValidator {
 
         DataManager.DeleteRecord(pairs, id.Value);
     }
+
+    public static void ValidateLoadableData (IDictionary<int, string> pairs){
+        if (pairs != null){
+            DataManager.InitialiseData(pairs);
+        } else {
+            UserFeedback.DisplayErrorMessage("Failed to initialise the data", "Data Initialisation Error");
+        }
+    }
 }

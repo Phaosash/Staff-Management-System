@@ -74,6 +74,7 @@ internal class DataManager {
 
         try {
             keyValuePairs.Remove(targetId);
+            UserFeedback.DisplayInformation("Successfully deleted the user from the dictionary", "Success");
         } catch (Exception ex){
             UserFeedback.DisplayErrorMessageWithException("Unable to delete the target record.", "Missing Details", ex);
         }

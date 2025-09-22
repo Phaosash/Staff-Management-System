@@ -13,17 +13,8 @@ public partial class SortedDictionaryManager: ObservableObject {
     public event Action? RequestApplicationClose;
 
     public SortedDictionaryManager (){
-        try {
-            if (StaffData.MasterFile.SortedData != null){
-                DataManager.InitialiseData(StaffData.MasterFile.SortedData);
-            } else {
-                UserFeedback.DisplayErrorMessage("Failed to initialise the data", "Data Initialisation Error");
-            }
-
-            StaffData.PropertyChanged += StaffDataPropertyChanged;
-        } catch (Exception ex){
-            UserFeedback.DisplayErrorMessageWithException("Failed to correctly initialise the SortedDictionaryManager!", "Data Initalisation Error", ex);
-        }
+        DataValidator.ValidateLoadableData(StaffData.MasterFile.SortedData!);
+        StaffData.PropertyChanged += StaffDataPropertyChanged;
     }
 
     private void StaffDataPropertyChanged (object? sender, PropertyChangedEventArgs e){
@@ -99,9 +90,15 @@ public partial class SortedDictionaryManager: ObservableObject {
         RequestClose?.Invoke();
         ClearSelectedId();
         ClearSelectedName();
+        StaffData.SearchTerm = string.Empty;
     }
     [RelayCommand] private void CloseApplication () => RequestApplicationClose?.Invoke();
     [RelayCommand] private void AddNewStaffMember () => DataValidator.ValidateNewUserData(StaffData.MasterFile.SortedData!, StaffData.NewStaffName!);
     [RelayCommand] private void UpdateStaffRecord () => DataValidator.ValidateUpdateData(StaffData.MasterFile.SortedData!, StaffData.UpdatedStaffName!, StaffData.SelectedStaffId);
-    [RelayCommand] private void DeleteRecord () => DataValidator.ValidateDeleteData(StaffData.MasterFile.SortedData!, StaffData.SelectedStaffId);
+    [RelayCommand] private void DeleteRecord (){
+        DataValidator.ValidateDeleteData(StaffData.MasterFile.SortedData!, StaffData.SelectedStaffId);
+        StaffData.SelectedStaffMember.Id = null;
+        StaffData.SelectedStaffMember.Name = string.Empty;
+        StaffData.UpdatedStaffName = string.Empty;
+    }
 }

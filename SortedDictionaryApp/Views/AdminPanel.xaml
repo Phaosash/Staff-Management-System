@@ -80,7 +80,8 @@
                         
                         <!--    Delete Record Button    -->
                         <Button Content="Delete Record" Margin="0,10,0,0"
-                                Padding="5" Cursor="Hand"/>
+                                Padding="5" Cursor="Hand"
+                                Command="{Binding DeleteRecordCommand}" />
                     </StackPanel>
                     
                     <!--    Create New Section  -->
