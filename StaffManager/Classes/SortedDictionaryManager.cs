@@ -12,8 +12,6 @@ public partial class SortedDictionaryManager: ObservableObject {
     public event Action? RequestClose;
     public event Action? RequestApplicationClose;
 
-    private enum StaffFieldToClear { Name, Id }
-
     public SortedDictionaryManager (){
         try {
             if (StaffData.MasterFile.SortedData != null){
@@ -91,39 +89,6 @@ public partial class SortedDictionaryManager: ObservableObject {
         }
     }
 
-    private void ModifyStaffRecord (DataOperations operation){
-        if (StaffData.MasterFile.SortedData == null){
-            UserFeedback.DisplayErrorMessage("Unable to update the record, no data was found.", "No Data Warning");
-            return;
-        }
-
-        switch (operation){
-            case DataOperations.Create:
-                if (string.IsNullOrWhiteSpace(StaffData.NewStaffName)){
-                    UserFeedback.DisplayErrorMessage("Unable to add new staff member no data was found.", "No Data Value");
-                    return;
-                } 
-
-                DataManager.AddStaffMemberToIDictionary(StaffData.MasterFile.SortedData, StaffData.NewStaffName!);
-                break;
-            case DataOperations.Update:
-                if (string.IsNullOrWhiteSpace(StaffData.UpdatedStaffName) || !StaffData.SelectedStaffId.HasValue){
-                    UserFeedback.DisplayErrorMessage("Unable to update the record, no data has been found.", "No Data Warning");
-                    return;
-                }
-
-                DataManager.UpdateStaffMembersName(StaffData.MasterFile.SortedData, StaffData.SelectedStaffId.Value, StaffData.UpdatedStaffName);
-                break;
-            case DataOperations.Delete:
-                if (!StaffData.SelectedStaffId.HasValue){
-                    return;
-                }
-
-                DataManager.DeleteRecord(StaffData.MasterFile.SortedData, (int)StaffData.SelectedStaffId);
-                break;
-        }
-    }
-
     [RelayCommand] private void ClearSelectedId () => ClearSelectedStaffField(StaffFieldToClear.Id);
     [RelayCommand] private void ClearSelectedName () => ClearSelectedStaffField(StaffFieldToClear.Name);
     [RelayCommand] private void OpenNewWindow (){ 
@@ -136,7 +101,7 @@ public partial class SortedDictionaryManager: ObservableObject {
         ClearSelectedName();
     }
     [RelayCommand] private void CloseApplication () => RequestApplicationClose?.Invoke();
-    [RelayCommand] private void AddNewStaffMember () => ModifyStaffRecord(DataOperations.Create);
-    [RelayCommand] private void UpdateStaffRecord () => ModifyStaffRecord(DataOperations.Update);
-    [RelayCommand] private void DeleteRecord () => ModifyStaffRecord(DataOperations.Delete);
+    [RelayCommand] private void AddNewStaffMember () => DataValidator.ValidateNewUserData(StaffData.MasterFile.SortedData!, StaffData.NewStaffName!);
+    [RelayCommand] private void UpdateStaffRecord () => DataValidator.ValidateUpdateData(StaffData.MasterFile.SortedData!, StaffData.UpdatedStaffName!, StaffData.SelectedStaffId);
+    [RelayCommand] private void DeleteRecord () => DataValidator.ValidateDeleteData(StaffData.MasterFile.SortedData!, StaffData.SelectedStaffId);
 }

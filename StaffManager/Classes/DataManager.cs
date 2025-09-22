@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using System.Windows.Media.Effects;
 
 namespace StaffManager.Classes;
 
