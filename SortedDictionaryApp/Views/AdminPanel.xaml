@@ -11,6 +11,9 @@
     
     <Window.InputBindings>
         <KeyBinding Key="L" Modifiers="Alt" Command="{Binding CloseWindowCommand}" />
+        <KeyBinding Key="U" Modifiers="Alt" Command="{Binding UpdateStaffRecordCommand}" />
+        <KeyBinding Key="D" Modifiers="Alt" Command="{Binding DeleteRecordCommand}" />
+        <KeyBinding Key="A" Modifiers="Alt" Command="{Binding AddNewStaffMemberCommand}" />
     </Window.InputBindings>
 
     <Border BorderThickness="2" BorderBrush="#4585A4">
@@ -71,7 +74,7 @@
 
                         <!--    Name Text Box   -->
                         <TextBox Text="{Binding StaffData.UpdatedStaffName}"
-                                 Margin="0,5,0,0" />
+                                 Margin="0,5,0,0" TabIndex="0" />
 
                         <!--    Update record button    -->
                         <Button Content="Update Record" Margin="0,10,0,0"
@@ -93,7 +96,7 @@
 
                         <!--    Name Text Box   -->
                         <TextBox Text="{Binding StaffData.NewStaffName}"
-                                 Margin="0,5,0,0" />
+                                 Margin="0,5,0,0" TabIndex="1" />
 
                         <Button Content="Add Staff Member" Margin="0,10,0,0"
                                 Padding="5" Cursor="Hand"

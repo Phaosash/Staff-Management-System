@@ -87,6 +87,7 @@ public partial class SortedDictionaryManager: ObservableObject {
         RequestNewWindow?.Invoke(); 
     }
     [RelayCommand] private void CloseWindow (){
+        DataValidator.ValidateDataForSave(StaffData.MasterFile.SortedData!);        
         RequestClose?.Invoke();
         ClearSelectedId();
         ClearSelectedName();

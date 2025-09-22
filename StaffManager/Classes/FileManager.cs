@@ -80,7 +80,7 @@ internal class FileManager {
                 csv.WriteField(kvp.Value);
                 csv.NextRecord();
             }
-            UserFeedback.DisplayInformation($"Successfully saved the {data} to {filePath}.", "Success");
+            UserFeedback.DisplayInformation($"Successfully saved the the changes to the data.", "Success");
         } catch (Exception ex){
             UserFeedback.DisplayErrorMessageWithException("Unable to save file, something went wrong!", "File Save Error", ex);
         }

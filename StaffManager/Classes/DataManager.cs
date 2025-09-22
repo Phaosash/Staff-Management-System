@@ -12,6 +12,15 @@ internal class DataManager {
         }
     }
 
+    public static void InitialiseDataSave (IDictionary<int, string> dictionary){
+        try {
+            var path = Path.Combine(AppContext.BaseDirectory, "Data", "MalinStaffNamesV3.csv");
+            FileManager.SaveToCSV(path, dictionary);
+        } catch (Exception ex){
+            UserFeedback.DisplayErrorMessageWithException("Failed to save the data, the file couldn't be found.", "Data Save Error", ex);
+        }
+    }
+
     private static int CreateNewStaffId (IDictionary<int, string> dict){
         try {
             if (dict == null || dict.Count <= 0){

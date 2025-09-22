@@ -35,4 +35,13 @@ internal class DataValidator {
             UserFeedback.DisplayErrorMessage("Failed to initialise the data", "Data Initialisation Error");
         }
     }
+
+    public static void ValidateDataForSave (IDictionary<int, string> pairs){
+        if (pairs == null){
+            UserFeedback.DisplayWarning("Unable to save the changes, the data couldn't be validated.", "Data Validation Error");
+            return;
+        }
+
+        DataManager.InitialiseDataSave(pairs);
+    }
 }
