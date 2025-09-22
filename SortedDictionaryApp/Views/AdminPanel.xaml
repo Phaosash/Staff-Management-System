@@ -41,16 +41,12 @@
                 <!--    Window Title    -->
                 <TextBlock Text="Admin Panel" FontSize="18" FontWeight="SemiBold" 
                            Grid.Row="0" Typography.Capitals="SmallCaps" />
-
-                <!--    Status Bar Section (Bottom Row)     -->
-                <StackPanel Orientation="Horizontal" Grid.Row="2">
-                    <TextBlock Text="Status:" FontSize="12" FontWeight="SemiBold"
-                               Typography.Capitals="SmallCaps" />
-                    
-                    <TextBlock Text="???" FontSize="12" Margin="10,0,0,0"
-                               Typography.Capitals="SmallCaps" />
-                </StackPanel>
                 
+                <!--    Close Button    -->
+                <Button Content="Close" Command="{Binding CloseWindowCommand}"
+                        Padding="5" Margin="5" Grid.Row="2"
+                        HorizontalAlignment="Right"/>
+
                 <!--    Main Display Section    -->
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>

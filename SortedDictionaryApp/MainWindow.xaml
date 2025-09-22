@@ -96,6 +96,11 @@
                 <TextBox Grid.Row="5" Text="{Binding StaffData.SelectedStaffName}"
                          classes:FocusBehavior.IsFocused="{Binding StaffData.ShouldFocusNameTextBox}"
                          KeyboardNavigation.TabIndex="3" />
+                
+                <!--    Admin Panel Button  -->
+                <Button Content="Admin Panel" Grid.Row="6" VerticalAlignment="Top" 
+                        Padding="5" Margin="10" Command="{Binding OpenNewWindowCommand}"
+                        Cursor="Hand" />
             </Grid>
 
             <!--    Fourth Column Content   -->
