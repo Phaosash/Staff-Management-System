@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NormalDictionaryApp.Views"
         mc:Ignorable="d" Title="Admin Interface" Height="450" Width="800"
-        WindowStyle="None" Background="Transparent" AllowsTransparency="True">
+        WindowStyle="None">
 
     <Window.InputBindings>
         <KeyBinding Key="L" Modifiers="Alt" Command="{Binding CloseWindowCommand}" />
@@ -15,14 +15,14 @@
     </Window.InputBindings>
 
     <Border BorderThickness="2" BorderBrush="#4585A4">
-        <Grid Background="#F2F2F2">
+        <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.33*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <!--    Creates the Admin Panels Side Bar   -->
-            <Grid Grid.Column="0" Background="#DFEEF1">
+            <Grid Grid.Column="0" Background="#F1E9DF">
                 <StackPanel Orientation="Vertical" Margin="5">
                     <TextBlock Text="Keyboard Shortcuts" FontSize="18" FontWeight="SemiBold"
                                Typography.Capitals="SmallCaps" />

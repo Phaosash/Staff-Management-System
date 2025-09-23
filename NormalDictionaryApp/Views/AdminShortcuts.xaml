@@ -25,21 +25,21 @@
         <!--    Left Side Section   -->
         <TextBlock Text="Shortcut" FontSize="12" FontWeight="SemiBold"
                Grid.Column="0" Grid.Row="0" Padding="5" 
-               Background="#4585A4" Foreground="#DFEEF1" />
+               Background="#A47245" Foreground="#DFEEF1" />
 
         <TextBlock Text="Alt + L" FontSize="12" VerticalAlignment="Center"
                Grid.Column="0" Grid.Row="1" Padding="5" />
 
         <TextBlock Text="Alt + U" FontSize="12" VerticalAlignment="Center"
                Grid.Column="0" Grid.Row="2" Padding="5"
-               Background="#B8D3DA" />
+               Background="#DACDB8" />
 
         <TextBlock Text="Alt + D" FontSize="12" VerticalAlignment="Center"
                Grid.Column="0" Grid.Row="3" Padding="5" />
 
         <TextBlock Text="Alt + A" FontSize="12" VerticalAlignment="Center"
                Grid.Column="0" Grid.Row="4" Padding="5"
-               Background="#B8D3DA" />
+               Background="#DACDB8" />
 
         <TextBlock Text="Tab" FontSize="12" VerticalAlignment="Center"
                Grid.Column="0" Grid.Row="5" Padding="5" />
@@ -47,21 +47,21 @@
         <!--    Right side section      -->
         <TextBlock Text="Description" FontSize="12" FontWeight="SemiBold"
                Grid.Column="1" Grid.Row="0" Padding="5" TextWrapping="Wrap"
-               Background="#4585A4" Foreground="#DFEEF1" />
+               Background="#A47245" Foreground="#DFEEF1" />
 
         <TextBlock Text="Close Admin Interface and save changes" FontSize="12"
                Grid.Column="1" Grid.Row="1" Padding="5" TextWrapping="Wrap" />
 
         <TextBlock Text="Update Staff Memeber Record" FontSize="12"
                Grid.Column="1" Grid.Row="2" Padding="5" TextWrapping="Wrap"
-               Background="#B8D3DA" />
+               Background="#DACDB8" />
 
         <TextBlock Text="Delete Staff Record" FontSize="12"
                Grid.Column="1" Grid.Row="3" Padding="5" TextWrapping="Wrap" />
 
         <TextBlock Text="Add New Staff Member" FontSize="12"
                Grid.Column="1" Grid.Row="4" Padding="5" TextWrapping="Wrap"
-               Background="#B8D3DA" />
+               Background="#DACDB8" />
 
         <TextBlock Text="Cycle through the input fields" FontSize="12"
                Grid.Column="1" Grid.Row="5" Padding="5" TextWrapping="Wrap" />

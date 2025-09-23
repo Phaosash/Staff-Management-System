@@ -6,10 +6,9 @@ using System.IO;
 namespace StaffManager.Classes;
 
 internal class FileManager {
-    //  This method reads a CSV file from a specified path and loads its data into a dictionary, mapping integer keys to string values.
-    //  If the file doesn't exist, an error message is shown, and a warning is logged. It validates each line for errors like missing or
-    //  invalid data, non-integer keys, and duplicate keys, providing appropriate error messages for each issue. If an error occurs while
-    //  reading or parsing the CSV, it catches the exception, displays a message, and logs the error.
+    //  This method loads key-value pairs from a CSV file into a dictionary, validating each line for missing or invalid data,
+    //  duplicate keys, and reporting errors with detailed messages. It gracefully handles file absence and parsing exceptions,
+    //  providing user feedback for any issues encountered during the process.
     public static void LoadFromCsv (string filePath, IDictionary<int, string> dictionary){
         if (!File.Exists(filePath)){
             UserFeedback.DisplayErrorMessage($"The specified file doesn't exist in {filePath}.", "File Path Error");
@@ -63,10 +62,8 @@ internal class FileManager {
         }
     }
 
-    //  This method writes the contents of a dictionary to a CSV file at the specified path. It iterates over the dictionary,
-    //  writing each key-value pair as a row in the CSV file. If the file is saved successfully, a success message is displayed,
-    //  and an informational log is recorded. If an error occurs during the file writing process, an error message is shown, and
-    //  the exception is logged.
+    //  This method saves key-value pairs from a dictionary to a CSV file without a header, writing each entry as a separate record,
+    //  and provides user feedback on success or failure with detailed error information if an exception occurs.
     public static void SaveToCSV (string filePath, IDictionary<int, string> data){
         try {
             using var writer = new StreamWriter(filePath);

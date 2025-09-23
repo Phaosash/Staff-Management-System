@@ -8,7 +8,7 @@
         xmlns:classes="clr-namespace:StaffManager.Classes;assembly=StaffManager" 
         d:DataContext="{d:DesignInstance Type=classes:SortedDictionaryManager}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="768" Width="1360">
+        Title="Normal Dictionary App" Height="768" Width="1360">
 
     <Window.InputBindings>
         <KeyBinding Key="I" Modifiers="Alt" Command="{Binding ClearSelectedIdCommand}" />
@@ -24,7 +24,7 @@
         </Grid.ColumnDefinitions>
 
         <!--    Left side content (Keyboard shortcuts)    -->
-        <Grid Grid.Column="0" Background="#DFEEF1">
+        <Grid Grid.Column="0" Background="#F1E9DF">
             <StackPanel Orientation="Vertical" Margin="10">
                 <!--    Section Title   -->
                 <TextBlock Text="Keyboard Shortcuts" FontSize="18" FontWeight="Bold" />
