@@ -3,6 +3,8 @@
 namespace StaffManager.Classes;
 
 internal class DataManager {
+    //  This method attempts to load staff data from a specific CSV file into the provided dictionary,
+    //  displaying an error message with exception details if the file cannot be found or loaded.
     public static void InitialiseData (IDictionary<int, string> dictionary){
         try {
             var path = Path.Combine(AppContext.BaseDirectory, "Data", "MalinStaffNamesV3.csv");
@@ -12,6 +14,8 @@ internal class DataManager {
         }
     }
 
+    //  This method attempts to save the staff data dictionary to a specific CSV file, showing an error
+    //  message with exception details if the save operation fails.
     public static void InitialiseDataSave (IDictionary<int, string> dictionary){
         try {
             var path = Path.Combine(AppContext.BaseDirectory, "Data", "MalinStaffNamesV3.csv");
@@ -21,6 +25,8 @@ internal class DataManager {
         }
     }
 
+    //  This method generates a new unique staff ID by starting from one above the first key in the dictionary and incrementing until
+    //  an unused ID is found, returning -1 if the dictionary is empty or an error occurs.
     private static int CreateNewStaffId (IDictionary<int, string> dict){
         try {
             if (dict == null || dict.Count <= 0){
@@ -40,6 +46,8 @@ internal class DataManager {
         }
     }
 
+    //  This method adds a new staff member to the dictionary by generating a unique ID, validating inputs,
+    //  and providing user feedback on success or failure during the process.
     public static void AddStaffMemberToIDictionary (IDictionary<int, string> dict, string name){
         if (dict == null || name == null){
             UserFeedback.DisplayErrorMessage("Unable to add new staff member, no data was found", "No Data Error");
@@ -57,6 +65,8 @@ internal class DataManager {
         UserFeedback.DisplayInformation($"Successfully added a new user to the list with ID: {newId}." , "Successful Completion");
     }
 
+    //  This method updates the name of a staff member in the dictionary by their ID, validating inputs and providing
+    //  feedback on success, missing ID, or any exceptions encountered during the update.
     public static void UpdateStaffMembersName (IDictionary<int, string> keyValuePairs, int targetId, string updatedName){
         if (keyValuePairs == null || keyValuePairs.Count <= 0 || string.IsNullOrWhiteSpace(updatedName)){
             UserFeedback.DisplayWarning("Unable to update the staff members details, no data was found", "Missing Details");
@@ -75,6 +85,8 @@ internal class DataManager {
         }
     }
 
+    //  This method deletes a staff record from the dictionary by the given ID, providing feedback on successful deletion
+    //  or warning if data is missing, and handling exceptions with an error message.
     public static void DeleteRecord (IDictionary<int, string> keyValuePairs, int targetId){
         if (keyValuePairs == null){
             UserFeedback.DisplayWarning("Unable to delete the record no data was found", "Missing Details");
