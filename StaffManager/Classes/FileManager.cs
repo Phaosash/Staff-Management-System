@@ -84,7 +84,8 @@ internal class FileManager {
                 csv.WriteField(kvp.Value);
                 csv.NextRecord();
             }
-            UserFeedback.DisplayInformation($"Successfully saved the the changes to the data.", "Success");
+            //  Removing this has a dramatic effect on the applications write times, when saving the data back into the file
+            //  UserFeedback.DisplayInformation($"Successfully saved the the changes to the data.", "Success");
         } catch (Exception ex){
             UserFeedback.DisplayErrorMessageWithException("Unable to save file, something went wrong!", "File Save Error", ex);
         }

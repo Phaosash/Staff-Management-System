@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using StaffManager.DataModels;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace StaffManager.Classes;
 
@@ -15,7 +16,12 @@ public partial class OrdinaryDictionaryManager: ObservableObject {
     //  This constructor validates the sorted staff data to ensure it can be loaded and subscribes to the
     //  PropertyChanged event of StaffData to react to future data changes.
     public OrdinaryDictionaryManager (){
+        Stopwatch sw = Stopwatch.StartNew();
         DataValidator.ValidateLoadableData(StaffData.MasterFile.Data!);
+        sw.Stop();
+
+        UserFeedback.LogApplicationTime($"Time taken to load data in Dictionary<int, string>: {sw.ElapsedMilliseconds} ms");
+
         StaffData.PropertyChanged += StaffDataPropertyChanged;
     }
 
