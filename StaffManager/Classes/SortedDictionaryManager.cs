@@ -16,7 +16,7 @@ public partial class SortedDictionaryManager: ObservableObject {
     //  This constructor validates the sorted staff data to ensure it can be loaded and subscribes to the
     //  PropertyChanged event of StaffData to react to future data changes.
     public SortedDictionaryManager (){
-        Stopwatch sw = Stopwatch.StartNew();
+        Stopwatch sw = Stopwatch.StartNew();       
         DataValidator.ValidateLoadableData(StaffData.MasterFile.SortedData!);
         sw.Stop();
 
@@ -123,9 +123,14 @@ public partial class SortedDictionaryManager: ObservableObject {
         UserFeedback.LogApplicationTime($"Time taken to save data in SortedDictionary<int, string>: {stopwatch.ElapsedMilliseconds} ms");
 
         RequestClose?.Invoke();
-        ClearSelectedId();
-        ClearSelectedName();
+        UpdatedStaffDataFields();
+    }
+
+    private void UpdatedStaffDataFields (){
+        StaffData.SelectedStaffMember = new();
         StaffData.SearchTerm = string.Empty;
+        StaffData.UpdatedStaffName = string.Empty;
+        StaffData.NewStaffName = string.Empty;
     }
 
     //  This command method triggers the request to close the entire application when invoked.

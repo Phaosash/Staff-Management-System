@@ -17,48 +17,55 @@ internal class FileManager {
 
         try {
             using var reader = new StreamReader(filePath);
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture){ HasHeaderRecord = false, IgnoreBlankLines = true, BadDataFound = context => {
-                if (context.Context != null){
-                    var csvContext = context.Context;
-                    int currentRow = csvContext.Parser!.Row;
-                    UserFeedback.DisplayErrorMessage($"Line {currentRow}: Bad data in CSV: {context.RawRecord}", "CSV Error");
-                } else {
-                    UserFeedback.DisplayErrorMessage($"Bad data in CSV: {context.RawRecord}", "CSV Error");
-                }
-            } };
-
-            using var csv = new CsvReader(reader, config);
+            using var csv = new CsvReader(reader, GetCsvConfiguration());
 
             int lineNumber = 0;
             while (csv.Read()){
                 lineNumber++;
-
-                try {
-                    var keyStr = csv.GetField(0)?.Trim();
-                    var value = csv.GetField(1)?.Trim();
-
-                    if (string.IsNullOrWhiteSpace(keyStr) || string.IsNullOrWhiteSpace(value)){
-                        UserFeedback.DisplayErrorMessage($"One or more fields are empty on Line: {lineNumber}", "CSV Value Error");
-                        continue;
-                    }
-
-                    if (!int.TryParse(keyStr, out int key)){
-                        UserFeedback.DisplayErrorMessage($"Line {lineNumber}: Invalid key '{keyStr}' — must be an integer.", "Key Value Error");
-                        continue;
-                    }
-
-                    if (dictionary.ContainsKey(key)){
-                        UserFeedback.DisplayErrorMessage($"Line {{lineNumber}}: Duplicate key found.", "Duplicate Key Value Error");
-                        continue;
-                    }
-
-                    dictionary[key] = value;
-                } catch (Exception ex){
-                    UserFeedback.DisplayErrorMessageWithException($"Error parsing CSV on Line {lineNumber}: ", "CSV Error", ex);
-                }
+                ProcessCsvLine(csv, lineNumber, dictionary);
             }
         } catch (Exception ex){
             UserFeedback.DisplayErrorMessageWithException($"Could not read the CSV file.", "File Read Error", ex);
+        }
+    }
+
+    private static CsvConfiguration GetCsvConfiguration (){
+        return new CsvConfiguration(CultureInfo.InvariantCulture){
+            HasHeaderRecord = false,
+            IgnoreBlankLines = true,
+            BadDataFound = context => {
+                int row = context.Context?.Parser?.Row ?? -1;
+                string message = row > 0
+                    ? $"Line {row}: Bad data in CSV: {context.RawRecord}"
+                    : $"Bad data in CSV: {context.RawRecord}";
+                UserFeedback.DisplayErrorMessage(message, "CSV Error");
+            }
+        };
+    }
+
+    private static void ProcessCsvLine (CsvReader csv, int lineNumber, IDictionary<int, string> dictionary) {
+        try {
+            var keyStr = csv.GetField(0)?.Trim();
+            var value = csv.GetField(1)?.Trim();
+
+            if (string.IsNullOrWhiteSpace(keyStr) || string.IsNullOrWhiteSpace(value)){
+                UserFeedback.DisplayErrorMessage($"One or more fields are empty on Line: {lineNumber}", "CSV Value Error");
+                return;
+            }
+
+            if (!int.TryParse(keyStr, out int key)){
+                UserFeedback.DisplayErrorMessage($"Line {lineNumber}: Invalid key '{keyStr}' — must be an integer.", "Key Value Error");
+                return;
+            }
+
+            if (dictionary.ContainsKey(key)){
+                UserFeedback.DisplayErrorMessage($"Line {lineNumber}: Duplicate key found.", "Duplicate Key Value Error");
+                return;
+            }
+
+            dictionary[key] = value;
+        } catch (Exception ex){
+            UserFeedback.DisplayErrorMessageWithException($"Error parsing CSV on Line {lineNumber}.", "CSV Error", ex);
         }
     }
 
@@ -77,7 +84,8 @@ internal class FileManager {
                 csv.WriteField(kvp.Value);
                 csv.NextRecord();
             }
-            UserFeedback.DisplayInformation($"Successfully saved the the changes to the data.", "Success");
+            //  Removing this has a dramatic effect on the applications write times, when saving the data back into the file
+            //  UserFeedback.DisplayInformation($"Successfully saved the the changes to the data.", "Success");
         } catch (Exception ex){
             UserFeedback.DisplayErrorMessageWithException("Unable to save file, something went wrong!", "File Save Error", ex);
         }
