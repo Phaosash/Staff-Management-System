@@ -31,4 +31,8 @@ internal class UserFeedback {
         MessageBox.Show(message, type, MessageBoxButton.OK, MessageBoxImage.Information);
         LoggingManager.Instance.LogInformation(message);
     }
+
+    public static void LogApplicationTime (string details){
+        LoggingManager.Instance.LogInformation(details);
+    }
 }

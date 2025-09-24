@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using StaffManager.DataModels;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace StaffManager.Classes;
 
@@ -15,7 +16,12 @@ public partial class SortedDictionaryManager: ObservableObject {
     //  This constructor validates the sorted staff data to ensure it can be loaded and subscribes to the
     //  PropertyChanged event of StaffData to react to future data changes.
     public SortedDictionaryManager (){
+        Stopwatch sw = Stopwatch.StartNew();
         DataValidator.ValidateLoadableData(StaffData.MasterFile.SortedData!);
+        sw.Stop();
+
+        UserFeedback.LogApplicationTime($"Time taken to load data in SortedDictionary<int, string>: {sw.ElapsedMilliseconds} ms");
+
         StaffData.PropertyChanged += StaffDataPropertyChanged;
     }
 
@@ -110,7 +116,12 @@ public partial class SortedDictionaryManager: ObservableObject {
     //  This command method validates the staff data before saving, triggers the window close request,
     //  clears the selected staff ID and name fields, and resets the search term to empty.
     [RelayCommand] private void CloseWindow (){
-        DataValidator.ValidateDataForSave(StaffData.MasterFile.SortedData!);        
+        Stopwatch stopwatch = Stopwatch.StartNew();
+        DataValidator.ValidateDataForSave(StaffData.MasterFile.SortedData!); 
+        stopwatch.Stop();
+
+        UserFeedback.LogApplicationTime($"Time taken to save data in SortedDictionary<int, string>: {stopwatch.ElapsedMilliseconds} ms");
+
         RequestClose?.Invoke();
         ClearSelectedId();
         ClearSelectedName();
