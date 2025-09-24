@@ -118,9 +118,14 @@ public partial class SortedDictionaryManager: ObservableObject {
     [RelayCommand] private void CloseWindow (){
         DataValidator.ValidateDataForSave(StaffData.MasterFile.SortedData!);        
         RequestClose?.Invoke();
-        ClearSelectedId();
-        ClearSelectedName();
+        UpdatedStaffDataFields();
+    }
+
+    private void UpdatedStaffDataFields (){
+        StaffData.SelectedStaffMember = new();
         StaffData.SearchTerm = string.Empty;
+        StaffData.UpdatedStaffName = string.Empty;
+        StaffData.NewStaffName = string.Empty;
     }
 
     //  This command method triggers the request to close the entire application when invoked.

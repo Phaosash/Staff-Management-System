@@ -109,7 +109,9 @@ public partial class OrdinaryDictionaryManager: ObservableObject {
     //  This command method updates the UpdatedStaffName with the currently selected staff member’s name and then
     //  triggers the RequestNewWindow event to open a new window.
     [RelayCommand] private void OpenNewWindow (){ 
-        StaffData.UpdatedStaffName = StaffData.SelectedStaffMember.Name;
+        if (StaffData.SelectedStaffMember != null){
+            StaffData.UpdatedStaffName = StaffData.SelectedStaffMember.Name;
+        }
         RequestNewWindow?.Invoke(); 
     }
     
@@ -118,9 +120,14 @@ public partial class OrdinaryDictionaryManager: ObservableObject {
     [RelayCommand] private void CloseWindow (){
         DataValidator.ValidateDataForSave(StaffData.MasterFile.Data!);        
         RequestClose?.Invoke();
-        ClearSelectedId();
-        ClearSelectedName();
+        UpdatedStaffDataFields();
+    }
+
+    private void UpdatedStaffDataFields (){
+        StaffData.SelectedStaffMember = new();
         StaffData.SearchTerm = string.Empty;
+        StaffData.UpdatedStaffName = string.Empty;
+        StaffData.NewStaffName = string.Empty;
     }
    
     //  This command method triggers the request to close the entire application when invoked.
