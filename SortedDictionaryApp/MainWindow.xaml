@@ -8,7 +8,7 @@
         xmlns:classes="clr-namespace:StaffManager.Classes;assembly=StaffManager" 
         d:DataContext="{d:DesignInstance Type=classes:SortedDictionaryManager}"
         mc:Ignorable="d"
-        Title="MainWindow" Height="768" Width="1360">
+        Title="Sorted Dictionary App" Height="768" Width="1360">
 
     <Window.InputBindings>
         <KeyBinding Key="I" Modifiers="Alt" Command="{Binding ClearSelectedIdCommand}" />
