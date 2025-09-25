@@ -7,7 +7,9 @@ using System.Diagnostics;
 
 namespace StaffManager.Classes;
 
-//  Fast performance thanks to the unsorted structure of the Diction<int, string>
+//  Fast performance thanks to the unsorted structure of the Dictionary<int, string>
+//  Slightly better Memory usage compared to the Sorted Dicationary
+//  Somehow had worse file I/O than the Sorted Dictionary.
 public partial class OrdinaryDictionaryManager: ObservableObject {
     public StaffData StaffData { get; } = new StaffData();
     public event Action? RequestNewWindow;
@@ -22,7 +24,7 @@ public partial class OrdinaryDictionaryManager: ObservableObject {
             DataValidator.ValidateLoadableData(StaffData.MasterFile.Data!);
             sw.Stop();
 
-            UserFeedback.LogApplicationTime($"Time taken to load data in Dictionary<int, string>: {sw.ElapsedMilliseconds} ms");
+            UserFeedback.LogApplicationInformation($"Time taken to load data in Dictionary<int, string>: {sw.ElapsedMilliseconds} ms");
 
             StaffData.PropertyChanged += StaffDataPropertyChanged;
         } catch (Exception ex){
@@ -144,7 +146,7 @@ public partial class OrdinaryDictionaryManager: ObservableObject {
             DataValidator.ValidateDataForSave(StaffData.MasterFile.Data!);  
             sw.Stop();
 
-            UserFeedback.LogApplicationTime($"Time taken to save data in Dictionary<int, string>: {sw.ElapsedMilliseconds} ms");
+            UserFeedback.LogApplicationInformation($"Time taken to save data in Dictionary<int, string>: {sw.ElapsedMilliseconds} ms");
 
             RequestClose?.Invoke();
             UpdatedStaffDataFields();

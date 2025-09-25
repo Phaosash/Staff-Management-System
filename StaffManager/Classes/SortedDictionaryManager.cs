@@ -8,7 +8,8 @@ using System.Diagnostics;
 namespace StaffManager.Classes;
 
 //  Slightly slower performance due to the SortedDictionary<int, string> sorting the data as it is loaded and manipulated.
-
+//  Slightly higher memory usage compared to the Dictionary application.
+//  Significantly better File I/O compared to the Dicationary application.
 public partial class SortedDictionaryManager: ObservableObject {
     public StaffData StaffData { get; } = new StaffData();
     public event Action? RequestNewWindow;
@@ -23,7 +24,7 @@ public partial class SortedDictionaryManager: ObservableObject {
             DataValidator.ValidateLoadableData(StaffData.MasterFile.SortedData!);
             sw.Stop();
 
-            UserFeedback.LogApplicationTime($"Time taken to load data in Dictionary<int, string>: {sw.ElapsedMilliseconds} ms");
+            UserFeedback.LogApplicationInformation($"Time taken to load data in Dictionary<int, string>: {sw.ElapsedMilliseconds} ms");
 
             StaffData.PropertyChanged += StaffDataPropertyChanged;
         } catch (Exception ex){
@@ -145,7 +146,7 @@ public partial class SortedDictionaryManager: ObservableObject {
             DataValidator.ValidateDataForSave(StaffData.MasterFile.SortedData!); 
             stopwatch.Stop();
 
-            UserFeedback.LogApplicationTime($"Time taken to save data in SortedDictionary<int, string>: {stopwatch.ElapsedMilliseconds} ms");
+            UserFeedback.LogApplicationInformation($"Time taken to save data in SortedDictionary<int, string>: {stopwatch.ElapsedMilliseconds} ms");
 
             RequestClose?.Invoke();
             UpdatedStaffDataFields();

@@ -32,11 +32,6 @@ internal class UserFeedback {
         LoggingManager.Instance.LogInformation(message);
     }
 
-    //  This method logs the supplied message about application time taken through the LoggingManager.
-    public static void LogApplicationTime (string details){
-        LoggingManager.Instance.LogInformation(details);
-    }
-
     //  This method is used to log information about the application without providing direct feedback
     //  to the user.
     public static void LogApplicationInformation (string details){
