@@ -19,7 +19,7 @@ internal class DataValidator {
             UserFeedback.DisplayErrorMessage("Unable to Update the employee record, either the name or ID couldn't be validated.", "No Data Value");
             return;
         }
-        
+            
         DataManager.UpdateStaffMembersName(pairs, id.Value, name);
     }
 

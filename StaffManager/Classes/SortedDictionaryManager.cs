@@ -7,6 +7,8 @@ using System.Diagnostics;
 
 namespace StaffManager.Classes;
 
+//  Slightly slower performance due to the SortedDictionary<int, string> sorting the data as it is loaded and manipulated.
+
 public partial class SortedDictionaryManager: ObservableObject {
     public StaffData StaffData { get; } = new StaffData();
     public event Action? RequestNewWindow;
@@ -16,34 +18,46 @@ public partial class SortedDictionaryManager: ObservableObject {
     //  This constructor validates the sorted staff data to ensure it can be loaded and subscribes to the
     //  PropertyChanged event of StaffData to react to future data changes.
     public SortedDictionaryManager (){
-        Stopwatch sw = Stopwatch.StartNew();       
-        DataValidator.ValidateLoadableData(StaffData.MasterFile.SortedData!);
-        sw.Stop();
+        try {
+            Stopwatch sw = Stopwatch.StartNew();
+            DataValidator.ValidateLoadableData(StaffData.MasterFile.SortedData!);
+            sw.Stop();
 
-        UserFeedback.LogApplicationTime($"Time taken to load data in SortedDictionary<int, string>: {sw.ElapsedMilliseconds} ms");
+            UserFeedback.LogApplicationTime($"Time taken to load data in Dictionary<int, string>: {sw.ElapsedMilliseconds} ms");
 
-        StaffData.PropertyChanged += StaffDataPropertyChanged;
+            StaffData.PropertyChanged += StaffDataPropertyChanged;
+        } catch (Exception ex){
+            UserFeedback.DisplayErrorMessageWithException("Failed to create the Data processor for the ordinary dictionary", "Application Failure", ex);
+        }
     }
 
     //  This method responds to changes in specific properties of StaffData, filtering staff members when the
     //  search term changes and triggering an update when the selected staff member changes.
     private void StaffDataPropertyChanged (object? sender, PropertyChangedEventArgs e){
-        switch (e.PropertyName){
-            case nameof(StaffData.SearchTerm):
-                FilterStaffMembers(StaffData.SearchTerm);
-                break;
-            case nameof(StaffData.SelectedStaffMember):
-                OnSelectedStaffMemberChanged(StaffData.SelectedStaffMember);
-                break;
+        try {
+            switch (e.PropertyName){
+                case nameof(StaffData.SearchTerm):
+                    FilterStaffMembers(StaffData.SearchTerm);
+                    break;
+                case nameof(StaffData.SelectedStaffMember):
+                    OnSelectedStaffMemberChanged(StaffData.SelectedStaffMember);
+                    break;
+            }
+        } catch (Exception ex){
+            UserFeedback.DisplayErrorMessageWithException("Encnountered an unexpected property change request.", "Invalid Property Change", ex);
         }
     }
 
     //  This method updates the selected staff name and ID in StaffData when a new staff member is selected,
     //  provided the selected value is not null.
     private void OnSelectedStaffMemberChanged (StaffMember? value){
-        if (value != null){
-            StaffData.SelectedStaffName = value.Name;
-            StaffData.SelectedStaffId = value.Id;
+        try {
+            if (value != null){
+                StaffData.SelectedStaffName = value.Name;
+                StaffData.SelectedStaffId = value.Id;
+            }
+        } catch (Exception ex){
+            UserFeedback.DisplayErrorMessageWithException("Encountered an unexpected issue when selecting a staff memeber", "Selection Changed Error", ex);
         }
     }
 
@@ -78,23 +92,27 @@ public partial class SortedDictionaryManager: ObservableObject {
     //  setting focus to the corresponding input field. If no staff member is selected or an unexpected field value is provided,
     //  it displays an appropriate error or warning message.
     private void ClearSelectedStaffField (StaffFieldToClear fieldToClear){
-        if (StaffData.SelectedStaffMember == null){
-            UserFeedback.DisplayErrorMessage("Attempted to clear staff field, but no staff member is selected.", "No Data Error");
-            return;
-        }
+        try {
+            if (StaffData.SelectedStaffMember == null){
+                UserFeedback.DisplayErrorMessage("Attempted to clear staff field, but no staff member is selected.", "No Data Error");
+                return;
+            }
 
-        switch (fieldToClear){
-            case StaffFieldToClear.Name:
-                StaffData.SelectedStaffName = string.Empty;
-                StaffData.ShouldFocusNameTextBox = true;
-                break;
-            case StaffFieldToClear.Id:
-                StaffData.SelectedStaffId = null;
-                StaffData.ShouldFocusIdTextBox = true;
-                break;
-            default:
-                UserFeedback.DisplayWarning($"Unexpected StaffField value: {fieldToClear}. No action taken.", "Unexpected Value");
-                break;
+            switch (fieldToClear){
+                case StaffFieldToClear.Name:
+                    StaffData.SelectedStaffName = string.Empty;
+                    StaffData.ShouldFocusNameTextBox = true;
+                    break;
+                case StaffFieldToClear.Id:
+                    StaffData.SelectedStaffId = null;
+                    StaffData.ShouldFocusIdTextBox = true;
+                    break;
+                default:
+                    UserFeedback.DisplayWarning($"Unexpected StaffField value: {fieldToClear}. No action taken.", "Unexpected Value");
+                    break;
+            }
+        } catch (Exception ex){
+            UserFeedback.DisplayErrorMessageWithException("Problem encountered updating the Ui while clearing fields.", "Data Clear Error", ex);
         }
     }
 
@@ -109,28 +127,43 @@ public partial class SortedDictionaryManager: ObservableObject {
     //  This command method updates the UpdatedStaffName with the currently selected staff member’s name and then
     //  triggers the RequestNewWindow event to open a new window.
     [RelayCommand] private void OpenNewWindow (){ 
-        StaffData.UpdatedStaffName = StaffData.SelectedStaffMember.Name;
-        RequestNewWindow?.Invoke(); 
+        try {
+            if (StaffData.SelectedStaffMember != null){
+                StaffData.UpdatedStaffName = StaffData.SelectedStaffMember.Name;
+            }
+            RequestNewWindow?.Invoke(); 
+        } catch (Exception ex){
+            UserFeedback.DisplayErrorMessageWithException("Failed to create the Admin Window", "UI Error", ex);
+        }
     }
 
     //  This command method validates the staff data before saving, triggers the window close request,
     //  clears the selected staff ID and name fields, and resets the search term to empty.
     [RelayCommand] private void CloseWindow (){
-        Stopwatch stopwatch = Stopwatch.StartNew();
-        DataValidator.ValidateDataForSave(StaffData.MasterFile.SortedData!); 
-        stopwatch.Stop();
+        try {
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            DataValidator.ValidateDataForSave(StaffData.MasterFile.SortedData!); 
+            stopwatch.Stop();
 
-        UserFeedback.LogApplicationTime($"Time taken to save data in SortedDictionary<int, string>: {stopwatch.ElapsedMilliseconds} ms");
+            UserFeedback.LogApplicationTime($"Time taken to save data in SortedDictionary<int, string>: {stopwatch.ElapsedMilliseconds} ms");
 
-        RequestClose?.Invoke();
-        UpdatedStaffDataFields();
+            RequestClose?.Invoke();
+            UpdatedStaffDataFields();
+        } catch (Exception ex){
+            UserFeedback.DisplayErrorMessageWithException("Encountered an error closing the AdminWindow", "UI Error", ex);
+        }
     }
 
+    //  //  This method is used to update the imput fields after the Admin panel has been closed.
     private void UpdatedStaffDataFields (){
-        StaffData.SelectedStaffMember = new();
-        StaffData.SearchTerm = string.Empty;
-        StaffData.UpdatedStaffName = string.Empty;
-        StaffData.NewStaffName = string.Empty;
+        try {
+            StaffData.SelectedStaffMember = new();
+            StaffData.SearchTerm = string.Empty;
+            StaffData.UpdatedStaffName = string.Empty;
+            StaffData.NewStaffName = string.Empty;
+        } catch (Exception ex){
+            UserFeedback.DisplayErrorMessageWithException("Encountered unexpected problem, updating the input fields", "UI Field Error", ex);
+        }
     }
 
     //  This command method triggers the request to close the entire application when invoked.
@@ -147,9 +180,13 @@ public partial class SortedDictionaryManager: ObservableObject {
     //  This command method validates the deletion of a staff record using the selected staff ID,
     //  then clears the ID and name of the selected staff member and resets the updated staff name.
     [RelayCommand] private void DeleteRecord (){
-        DataValidator.ValidateDeleteData(StaffData.MasterFile.SortedData!, StaffData.SelectedStaffId);
-        StaffData.SelectedStaffMember.Id = null;
-        StaffData.SelectedStaffMember.Name = string.Empty;
-        StaffData.UpdatedStaffName = string.Empty;
+        try {
+            DataValidator.ValidateDeleteData(StaffData.MasterFile.SortedData!, StaffData.SelectedStaffId);
+            StaffData.SelectedStaffMember.Id = null;
+            StaffData.SelectedStaffMember.Name = string.Empty;
+            StaffData.UpdatedStaffName = string.Empty;
+        } catch (Exception ex){
+            UserFeedback.DisplayErrorMessageWithException("Encountered unexpected problem, attempting to delete the user details", "Data Update Error", ex);
+        }
     }
 }

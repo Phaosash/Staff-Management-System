@@ -18,10 +18,14 @@ public static class FocusBehavior {
     //  This method handles changes to the IsFocused property by setting focus to the TextBox, selecting all its
     //  text when the property becomes true, and then resetting the property to false.
     private static void OnIsFocusedChanged (DependencyObject d, DependencyPropertyChangedEventArgs e){
-        if (d is TextBox textBox && e.NewValue is bool isFocused && isFocused){
-            textBox.Focus();
-            textBox.SelectAll();
-            SetIsFocused(textBox, false);
+        try {
+            if (d is TextBox textBox && e.NewValue is bool isFocused && isFocused){
+                textBox.Focus();
+                textBox.SelectAll();
+                SetIsFocused(textBox, false);
+            }
+        } catch (Exception ex){
+            UserFeedback.LogError("Failed detecting the focused change.", ex);    
         }
     }
 }

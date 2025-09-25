@@ -54,15 +54,19 @@ internal class DataManager {
             return;
         } 
 
-        int newId = CreateNewStaffId(dict);
+        try {
+            int newId = CreateNewStaffId(dict);
 
-        if (newId == -1){
-            UserFeedback.DisplayErrorMessage("Failed to generate a new unique ID", "Invalid Id Value");
-            return;
-        }
+            if (newId == -1){
+                UserFeedback.DisplayErrorMessage("Failed to generate a new unique ID", "Invalid Id Value");
+                return;
+            }
         
-        dict.Add(newId, name);
-        UserFeedback.DisplayInformation($"Successfully added a new user to the list with ID: {newId}." , "Successful Completion");
+            dict.Add(newId, name);
+            UserFeedback.DisplayInformation($"Successfully added a new user to the list with ID: {newId}." , "Successful Completion");
+        } catch (Exception ex){
+            UserFeedback.DisplayErrorMessageWithException("Failed to add the new staff member to the dictionary.", "Data Processing Error", ex);
+        }
     }
 
     //  This method updates the name of a staff member in the dictionary by their ID, validating inputs and providing

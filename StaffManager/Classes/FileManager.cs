@@ -25,24 +25,35 @@ internal class FileManager {
                 ProcessCsvLine(csv, lineNumber, dictionary);
             }
         } catch (Exception ex){
-            UserFeedback.DisplayErrorMessageWithException($"Could not read the CSV file.", "File Read Error", ex);
+            UserFeedback.DisplayErrorMessageWithException("Could not read the CSV file.", "File Read Error", ex);
         }
     }
 
+    //  This method creates and returns a CsvConfiguration object with settings to ignore blank lines and handle bad
+    //  data by displaying an error message that includes the row number if available. If an exception occurs during
+    //  configuration, it catches the error, displays an appropriate message, and returns a default configuration.
     private static CsvConfiguration GetCsvConfiguration (){
-        return new CsvConfiguration(CultureInfo.InvariantCulture){
-            HasHeaderRecord = false,
-            IgnoreBlankLines = true,
-            BadDataFound = context => {
-                int row = context.Context?.Parser?.Row ?? -1;
-                string message = row > 0
-                    ? $"Line {row}: Bad data in CSV: {context.RawRecord}"
-                    : $"Bad data in CSV: {context.RawRecord}";
-                UserFeedback.DisplayErrorMessage(message, "CSV Error");
-            }
-        };
+        try { 
+            return new CsvConfiguration(CultureInfo.InvariantCulture){
+                HasHeaderRecord = false,
+                IgnoreBlankLines = true,
+                BadDataFound = context => {
+                    int row = context.Context?.Parser?.Row ?? -1;
+                    string message = row > 0
+                        ? $"Line {row}: Bad data in CSV: {context.RawRecord}"
+                        : $"Bad data in CSV: {context.RawRecord}";
+                    UserFeedback.DisplayErrorMessage(message, "CSV Error");
+                }
+            };
+        } catch (Exception ex){
+            UserFeedback.DisplayErrorMessageWithException("Error encountered with the CSV configuration.", "CSV Configuration Error", ex);
+            return new CsvConfiguration(CultureInfo.InvariantCulture);
+        }
     }
 
+    //  This method reads and validates a line from a CSV file, ensuring the key is a non-empty integer and not duplicated,
+    //  and that the value is also non-empty. If any validation fails or an exception occurs, an appropriate error message
+    //  is displayed; otherwise, the key-value pair is added to the dictionary.
     private static void ProcessCsvLine (CsvReader csv, int lineNumber, IDictionary<int, string> dictionary) {
         try {
             var keyStr = csv.GetField(0)?.Trim();
@@ -71,6 +82,7 @@ internal class FileManager {
 
     //  This method saves key-value pairs from a dictionary to a CSV file without a header, writing each entry as a separate record,
     //  and provides user feedback on success or failure with detailed error information if an exception occurs.
+    //  The save time is logged as a means of tracking the applications performance.
     public static void SaveToCSV (string filePath, IDictionary<int, string> data){
         try {
             using var writer = new StreamWriter(filePath);
@@ -86,6 +98,8 @@ internal class FileManager {
             }
             //  Removing this has a dramatic effect on the applications write times, when saving the data back into the file
             //  UserFeedback.DisplayInformation($"Successfully saved the the changes to the data.", "Success");
+
+            UserFeedback.LogApplicationInformation("Successfully saved the the changes to the data.");
         } catch (Exception ex){
             UserFeedback.DisplayErrorMessageWithException("Unable to save file, something went wrong!", "File Save Error", ex);
         }
