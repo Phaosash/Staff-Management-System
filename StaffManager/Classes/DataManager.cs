@@ -1,25 +1,78 @@
-﻿using System.IO;
-
-namespace StaffManager.Classes;
+﻿namespace StaffManager.Classes;
 
 internal class DataManager {
     //  This method attempts to load staff data from a specific CSV file into the provided dictionary,
     //  displaying an error message with exception details if the file cannot be found or loaded.
-    public static void InitialiseData (IDictionary<int, string> dictionary){
+    public static IDictionary<int, string> InitialiseData (IDictionary<int, string> dictionary){
         try {
-            var path = Path.Combine(AppContext.BaseDirectory, "Data", "MalinStaffNamesV3.csv");
-            FileManager.LoadFromCsv(path, dictionary);
+            var path = System.IO.Path.Combine(AppContext.BaseDirectory, "Data", "MalinStaffNamesV3.csv");
+            var readFile = FileManager.ReadGenericFile(path);
+            dictionary = ConvertListToDictionary(readFile, dictionary);
+            ProcessDictionaryData(dictionary);
+            return dictionary;
         } catch (Exception ex){ 
             UserFeedback.DisplayErrorMessageWithException("Failed to load the data, the file couldn't be found.", "Data Initialisation Error", ex);
+            return new Dictionary<int, string>();
         }
+    }
+
+    //  This method is used to convert the List<string> into an IDictionary<int, string>
+    private static IDictionary<int, string> ConvertListToDictionary (List<string> strings, IDictionary<int, string> pairs){
+        foreach (var parts in strings.Select(line => line.Split(',')).Where(parts => parts.Length >= 2)){
+            if (int.TryParse(parts[0].Trim(), out int key)){
+                string value = parts[1].Trim();
+                pairs[key] = value;
+            }
+        }
+
+        return pairs;
+    }
+
+    //  This method is used to validate the entires contained in the IDictionary<int, string> to ensure that the data isn't malformed.
+    private static IDictionary<int, string> ProcessDictionaryData (IDictionary<int, string> dictionary){
+        var validated = new Dictionary<int, string>(); 
+        int lineNumber = 1;
+
+        foreach (var kvp in dictionary){
+            try {
+                double keyStr = kvp.Key;
+                string? value = kvp.Value.Trim();
+
+                if (string.IsNullOrWhiteSpace(value)){
+                    UserFeedback.DisplayErrorMessage($"Line {lineNumber}: One or more fields are empty.", "Validation Error");
+                    lineNumber++;
+                    continue;
+                }
+
+                if (double.IsNaN(keyStr)){
+                    UserFeedback.DisplayErrorMessage($"Line {lineNumber}: Invalid key '{keyStr}' — must be an integer.", "Validation Error");
+                    lineNumber++;
+                    continue;
+                }
+
+                if (validated.ContainsKey((int)keyStr)){
+                    UserFeedback.DisplayErrorMessage($"Line {lineNumber}: Duplicate key '{keyStr}' detected.", "Validation Error");
+                    lineNumber++;
+                    continue;
+                }
+
+                validated[(int)keyStr] = value;
+            } catch (Exception ex){
+                UserFeedback.DisplayErrorMessageWithException($"Line {lineNumber}: Unexpected error.", "Processing Error", ex);
+            }
+
+            lineNumber++;
+        }
+
+        return validated;
     }
 
     //  This method attempts to save the staff data dictionary to a specific CSV file, showing an error
     //  message with exception details if the save operation fails.
     public static void InitialiseDataSave (IDictionary<int, string> dictionary){
         try {
-            var path = Path.Combine(AppContext.BaseDirectory, "Data", "MalinStaffNamesV3.csv");
-            FileManager.SaveToCSV(path, dictionary);
+            var path = System.IO.Path.Combine(AppContext.BaseDirectory, "Data", "MalinStaffNamesV3.csv");
+            FileManager.SaveIDictionaryToCSV(path, dictionary);
         } catch (Exception ex){
             UserFeedback.DisplayErrorMessageWithException("Failed to save the data, the file couldn't be found.", "Data Save Error", ex);
         }

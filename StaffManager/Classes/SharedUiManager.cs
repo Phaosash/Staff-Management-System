@@ -14,15 +14,21 @@ public partial class SharedUiManager: ObservableObject {
     public event Action? RequestApplicationClose;
 
     [ObservableProperty] private IDictionary<int, string>? _masterFile;
+    private enum StaffFieldToClear {
+        Name,
+        Id
+    }
 
     //  This constructor validates the sorted staff data to ensure it can be loaded and subscribes to the
     //  PropertyChanged event of StaffData to react to future data changes.
-    public SharedUiManager (bool sortData){
+    public SharedUiManager (IDictionary<int, string> theDictionary){
         try {
-            InitialiseDictionary(sortData);
-            
+            //InitialiseDictionaryType(sortData);
+
+            MasterFile = theDictionary;
+
             Stopwatch sw = Stopwatch.StartNew();
-            DataValidator.ValidateLoadableData(MasterFile!);
+            MasterFile = DataValidator.ValidateLoadableData(MasterFile!);
             sw.Stop();
 
             UserFeedback.LogApplicationInformation($"Time taken to load data in Dictionary<int, string>: {sw.ElapsedMilliseconds} ms");
@@ -30,17 +36,6 @@ public partial class SharedUiManager: ObservableObject {
             StaffData.PropertyChanged += StaffDataPropertyChanged;
         } catch (Exception ex){
             UserFeedback.DisplayErrorMessageWithException("Failed to create the Data processor for the ordinary dictionary", "Application Failure", ex);
-        }
-    }
-
-    //  This method initialises the _masterFile as wither a SortedDictionary<int, string> or as a Dictionary<int, string>
-    private void InitialiseDictionary (bool sortData){
-        if (sortData){
-            MasterFile = new SortedDictionary<int, string>();
-            UserFeedback.LogApplicationInformation("MasterFile initialised as SortedDictionary<int, string>");
-        } else {
-            MasterFile = new Dictionary<int, string>();
-            UserFeedback.LogApplicationInformation("MasterFile initialised as Dictionary<int, string>");
         }
     }
 
@@ -186,7 +181,9 @@ public partial class SharedUiManager: ObservableObject {
 
     //  This command method validates the data for adding a new staff member using the current
     //  sorted data and the new staff name provided.
-    [RelayCommand] private void AddNewStaffMember() => DataValidator.ValidateNewUserData(MasterFile!, StaffData.NewStaffName!);
+    [RelayCommand] private void AddNewStaffMember(){
+        DataValidator.ValidateNewUserData(MasterFile!, StaffData.NewStaffName!);
+    }
 
     //  This command method validates the updated staff information by checking the current sorted data,
     //  the updated staff name, and the selected staff ID before applying changes.

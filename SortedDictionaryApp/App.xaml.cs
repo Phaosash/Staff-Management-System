@@ -32,7 +32,7 @@ public partial class App : Application {
     private static void ConfigureServices (IServiceCollection services){
         try {
             services.AddSingleton<MainWindow>();
-            services.AddSingleton<SharedUiManager>(provider => new SharedUiManager(true));
+            services.AddSingleton<SharedUiManager>(provider => new SharedUiManager(new SortedDictionary<int, string>()));
             services.AddTransient<AdminPanel>();
         } catch (Exception ex){
             LoggingManager.Instance.LogError(ex, "Failed to ConfigureServices!");

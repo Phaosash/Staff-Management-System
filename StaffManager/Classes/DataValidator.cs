@@ -36,12 +36,13 @@ internal class DataValidator {
 
     //  This method attempts to initialize data using the provided dictionary if it’s not null, otherwise it displays an error
     //  indicating data initialization failure.
-    public static void ValidateLoadableData (IDictionary<int, string> pairs){
-        if (pairs != null){
-            DataManager.InitialiseData(pairs);
-        } else {
-            UserFeedback.DisplayErrorMessage("Failed to initialise the data", "Data Initialisation Error");
+    public static IDictionary<int, string> ValidateLoadableData (IDictionary<int, string> pairs){
+        if (pairs == null){
+            UserFeedback.DisplayErrorMessage("The selected dictionary is null.", "Data Validation Error");
+            return new Dictionary<int, string>();
         }
+
+        return DataManager.InitialiseData(pairs);
     }
 
     //  This method checks if the data dictionary is valid before proceeding to initialize the save process,
