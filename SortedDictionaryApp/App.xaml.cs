@@ -1,7 +1,7 @@
 ﻿using ErrorLogging;
 using Microsoft.Extensions.DependencyInjection;
-using SortedDictionaryApp.Views;
 using StaffManager.Classes;
+using StaffManager.SharedUi;
 using System.Windows;
 
 namespace SortedDictionaryApp;
@@ -32,7 +32,7 @@ public partial class App : Application {
     private static void ConfigureServices (IServiceCollection services){
         try {
             services.AddSingleton<MainWindow>();
-            services.AddSingleton<SortedDictionaryManager>();
+            services.AddSingleton<SharedUiManager>(provider => new SharedUiManager(true));
             services.AddTransient<AdminPanel>();
         } catch (Exception ex){
             LoggingManager.Instance.LogError(ex, "Failed to ConfigureServices!");

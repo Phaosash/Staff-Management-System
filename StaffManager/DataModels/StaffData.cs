@@ -4,11 +4,8 @@ using System.Collections.ObjectModel;
 namespace StaffManager.DataModels;
 
 public partial class StaffData: ObservableObject {
-    private MasterFile _masterFile = new();
     private ObservableCollection<StaffMember> _staffMembers = [];
     private string? _searchTerm = string.Empty;
-    private string? _searchStaffName = string.Empty;
-    private int _searchStaffId;
     private StaffMember _selectedStaffMember = new();
     private bool _shouldFocusIdTextBox;
     private bool _shouldFocusNameTextBox;
@@ -16,14 +13,6 @@ public partial class StaffData: ObservableObject {
     private int? _selectedStaffId;
     private string? _newStaffName = string.Empty;
     private string? _updatedStaffName = string.Empty;
-
-    //  This property exposes a MasterFile instance with a getter
-    //  and a setter that updates the backing field using SetProperty,
-    //  which likely handles change notification.
-    public MasterFile MasterFile {
-        get => _masterFile;
-        set => SetProperty(ref _masterFile, value);
-    }
 
     //  This property manages a collection of StaffMember objects using an ObservableCollection,
     //  with a getter and setter that updates the backing field through SetProperty to support
@@ -38,20 +27,6 @@ public partial class StaffData: ObservableObject {
     public string? SearchTerm {
         get => _searchTerm;
         set => SetProperty(ref _searchTerm, value);
-    }
-
-    //  This nullable string property provides access to a backing field with a
-    //  getter and setter that uses SetProperty to handle updates and notify changes.
-    public string? SearchStaffName {
-        get => _searchStaffName;
-        set => SetProperty(ref _searchStaffName, value);
-    }
-
-    //  This integer property uses a getter and setter to access a backing field, with
-    //  SetProperty ensuring updates trigger change notifications.
-    public int SearchStaffId {
-        get => _searchStaffId;
-        set => SetProperty(ref _searchStaffId, value);
     }
 
     //  This property manages the currently selected StaffMember with a getter and setter

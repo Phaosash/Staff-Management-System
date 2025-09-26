@@ -37,8 +37,10 @@ public partial class SharedUiManager: ObservableObject {
     private void InitialiseDictionary (bool sortData){
         if (sortData){
             MasterFile = new SortedDictionary<int, string>();
+            UserFeedback.LogApplicationInformation("MasterFile initialised as SortedDictionary<int, string>");
         } else {
             MasterFile = new Dictionary<int, string>();
+            UserFeedback.LogApplicationInformation("MasterFile initialised as Dictionary<int, string>");
         }
     }
 

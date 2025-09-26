@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using NormalDictionaryApp.Views;
 using StaffManager.Classes;
+using StaffManager.SharedUi;
 using System.Windows;
 
 namespace NormalDictionaryApp;
@@ -10,13 +10,13 @@ public partial class MainWindow : Window {
     //  OrdinaryDictionaryManager instance. It also handles two events from the manager: opening a new window and
     //  closing the application.
 
-    public MainWindow (OrdinaryDictionaryManager ordinaryDictionaryManager){
+    public MainWindow (SharedUiManager sharedUiManager){
         InitializeComponent();
 
-        DataContext = ordinaryDictionaryManager;
+        DataContext = sharedUiManager;
         
-        ordinaryDictionaryManager.RequestNewWindow += OnRequestNewWindow;
-        ordinaryDictionaryManager.RequestApplicationClose += () => this.Close();
+        sharedUiManager.RequestNewWindow += OnRequestNewWindow;
+        sharedUiManager.RequestApplicationClose += () => this.Close();
     }
 
     //  This method handles requests to open a new window by retrieving an instance of AdminPanel

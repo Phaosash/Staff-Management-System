@@ -1,8 +1,8 @@
 ﻿using ErrorLogging;
 using Microsoft.Extensions.DependencyInjection;
 using StaffManager.Classes;
-using NormalDictionaryApp.Views;
 using System.Windows;
+using StaffManager.SharedUi;
 
 namespace NormalDictionaryApp;
 
@@ -32,7 +32,7 @@ public partial class App : Application {
     private static void ConfigureServices (IServiceCollection services){
         try {
             services.AddSingleton<MainWindow>();
-            services.AddSingleton<OrdinaryDictionaryManager>();
+            services.AddSingleton<SharedUiManager>(provider => new SharedUiManager(false));
             services.AddTransient<AdminPanel>();
         } catch (Exception ex){
             LoggingManager.Instance.LogError(ex, "Failed to ConfigureServices!");
