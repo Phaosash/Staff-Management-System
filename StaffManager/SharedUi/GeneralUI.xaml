@@ -55,7 +55,7 @@
                        Padding="5" Grid.Row="0"  />
 
                 <!--    Read Only List Box  -->
-                <ListBox Grid.Row="1" IsEnabled="False" ItemsSource="{Binding StaffData.MasterFile.SortedData}" />
+                <ListBox Grid.Row="1" IsEnabled="False" ItemsSource="{Binding MasterFile}" />
             </Grid>
 
             <!--    Third Column    -->

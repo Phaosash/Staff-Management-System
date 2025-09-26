@@ -13,7 +13,7 @@ public partial class SharedUiManager: ObservableObject {
     public event Action? RequestClose;
     public event Action? RequestApplicationClose;
 
-    private IDictionary<int, string>? _masterFile;
+    [ObservableProperty] private IDictionary<int, string>? _masterFile;
 
     //  This constructor validates the sorted staff data to ensure it can be loaded and subscribes to the
     //  PropertyChanged event of StaffData to react to future data changes.
@@ -22,7 +22,7 @@ public partial class SharedUiManager: ObservableObject {
             InitialiseDictionary(sortData);
             
             Stopwatch sw = Stopwatch.StartNew();
-            DataValidator.ValidateLoadableData(_masterFile!);
+            DataValidator.ValidateLoadableData(MasterFile!);
             sw.Stop();
 
             UserFeedback.LogApplicationInformation($"Time taken to load data in Dictionary<int, string>: {sw.ElapsedMilliseconds} ms");
@@ -36,9 +36,9 @@ public partial class SharedUiManager: ObservableObject {
     //  This method initialises the _masterFile as wither a SortedDictionary<int, string> or as a Dictionary<int, string>
     private void InitialiseDictionary (bool sortData){
         if (sortData){
-            _masterFile = new SortedDictionary<int, string>();
+            MasterFile = new SortedDictionary<int, string>();
         } else {
-            _masterFile = new Dictionary<int, string>();
+            MasterFile = new Dictionary<int, string>();
         }
     }
 
@@ -77,7 +77,7 @@ public partial class SharedUiManager: ObservableObject {
     //  appropriate error message to the user.
     private void FilterStaffMembers (string? searchTerm){
         try {
-            if (_masterFile == null) {
+            if (MasterFile == null) {
                 UserFeedback.DisplayErrorMessage("Filter failed: MasterFile.Data is null.", "No Data Error");
                 return;
             }
@@ -88,9 +88,9 @@ public partial class SharedUiManager: ObservableObject {
             if (string.IsNullOrWhiteSpace(searchTerm)){
                 filtered = [];
             } else if (int.TryParse(searchTerm, out _)){
-                filtered = _masterFile.Where(kvp => kvp.Key.ToString().StartsWith(searchTerm)).Select(kvp => new StaffMember { Id = kvp.Key, Name = kvp.Value });
+                filtered = MasterFile.Where(kvp => kvp.Key.ToString().StartsWith(searchTerm)).Select(kvp => new StaffMember { Id = kvp.Key, Name = kvp.Value });
             } else {
-                filtered = _masterFile.Where(kvp => kvp.Value.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).Select(kvp => new StaffMember { Id = kvp.Key, Name = kvp.Value });
+                filtered = MasterFile.Where(kvp => kvp.Value.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).Select(kvp => new StaffMember { Id = kvp.Key, Name = kvp.Value });
             }
 
             StaffData.StaffMembers = new ObservableCollection<StaffMember>(filtered);
@@ -155,7 +155,7 @@ public partial class SharedUiManager: ObservableObject {
     private void CloseWindow (){
         try {
             Stopwatch sw = Stopwatch.StartNew();
-            DataValidator.ValidateDataForSave(_masterFile!);
+            DataValidator.ValidateDataForSave(MasterFile!);
             sw.Stop();
 
             UserFeedback.LogApplicationInformation($"Time taken to save data in Dictionary<int, string>: {sw.ElapsedMilliseconds} ms");
@@ -184,18 +184,18 @@ public partial class SharedUiManager: ObservableObject {
 
     //  This command method validates the data for adding a new staff member using the current
     //  sorted data and the new staff name provided.
-    [RelayCommand] private void AddNewStaffMember() => DataValidator.ValidateNewUserData(_masterFile!, StaffData.NewStaffName!);
+    [RelayCommand] private void AddNewStaffMember() => DataValidator.ValidateNewUserData(MasterFile!, StaffData.NewStaffName!);
 
     //  This command method validates the updated staff information by checking the current sorted data,
     //  the updated staff name, and the selected staff ID before applying changes.
-    [RelayCommand] private void UpdateStaffRecord() => DataValidator.ValidateUpdateData(_masterFile!, StaffData.UpdatedStaffName!, StaffData.SelectedStaffId);
+    [RelayCommand] private void UpdateStaffRecord() => DataValidator.ValidateUpdateData(MasterFile!, StaffData.UpdatedStaffName!, StaffData.SelectedStaffId);
 
     //  This command method validates the deletion of a staff record using the selected staff ID,
     //  then clears the ID and name of the selected staff member and resets the updated staff name.
     [RelayCommand]
     private void DeleteRecord (){
         try {
-            DataValidator.ValidateDeleteData(_masterFile!, StaffData.SelectedStaffId);
+            DataValidator.ValidateDeleteData(MasterFile!, StaffData.SelectedStaffId);
             StaffData.SelectedStaffMember.Id = null;
             StaffData.SelectedStaffMember.Name = string.Empty;
             StaffData.UpdatedStaffName = string.Empty;
