@@ -8,18 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Data\MalinStaffNamesV3.csv" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Data\MalinStaffNamesV3.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-    <PackageReference Include="CsvHelper" Version="33.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\StaffManager.Manager\StaffManager.Manager.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\" />
   </ItemGroup>
 
 </Project>

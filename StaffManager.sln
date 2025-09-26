@@ -1,15 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36429.23 d17.14
+VisualStudioVersion = 17.14.36429.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaffManager", "StaffManager\StaffManager.csproj", "{B8FD53EC-DC3A-4B59-8CB1-733BB919AF65}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErrorLogging", "ErrorLogging\ErrorLogging.csproj", "{FF43377C-EBD7-472B-B79E-BE8010809B50}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NormalDictionaryApp", "NormalDictionaryApp\NormalDictionaryApp.csproj", "{DBBC5E14-52A1-4B3E-86B3-6A9DAE959FF1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SortedDictionaryApp", "SortedDictionaryApp\SortedDictionaryApp.csproj", "{B30EB219-A015-4385-998B-0EAA94B94C80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaffManager.SharedUI", "StaffManager.SharedUI\StaffManager.SharedUI.csproj", "{20EA5F6D-CD6E-47DE-AAAA-F79FD952B094}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StaffManager.Manager", "StaffManager.Manager\StaffManager.Manager.csproj", "{301B4BB3-8F38-4182-A267-ADBFF46A0D09}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{AC6023FB-3F9B-4C6E-8EA3-2ED5D1C3D41E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +27,6 @@ Global
 		{B8FD53EC-DC3A-4B59-8CB1-733BB919AF65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B8FD53EC-DC3A-4B59-8CB1-733BB919AF65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B8FD53EC-DC3A-4B59-8CB1-733BB919AF65}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FF43377C-EBD7-472B-B79E-BE8010809B50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FF43377C-EBD7-472B-B79E-BE8010809B50}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FF43377C-EBD7-472B-B79E-BE8010809B50}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FF43377C-EBD7-472B-B79E-BE8010809B50}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DBBC5E14-52A1-4B3E-86B3-6A9DAE959FF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DBBC5E14-52A1-4B3E-86B3-6A9DAE959FF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBBC5E14-52A1-4B3E-86B3-6A9DAE959FF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,9 +35,23 @@ Global
 		{B30EB219-A015-4385-998B-0EAA94B94C80}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B30EB219-A015-4385-998B-0EAA94B94C80}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B30EB219-A015-4385-998B-0EAA94B94C80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20EA5F6D-CD6E-47DE-AAAA-F79FD952B094}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20EA5F6D-CD6E-47DE-AAAA-F79FD952B094}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20EA5F6D-CD6E-47DE-AAAA-F79FD952B094}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20EA5F6D-CD6E-47DE-AAAA-F79FD952B094}.Release|Any CPU.Build.0 = Release|Any CPU
+		{301B4BB3-8F38-4182-A267-ADBFF46A0D09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{301B4BB3-8F38-4182-A267-ADBFF46A0D09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{301B4BB3-8F38-4182-A267-ADBFF46A0D09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{301B4BB3-8F38-4182-A267-ADBFF46A0D09}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DBBC5E14-52A1-4B3E-86B3-6A9DAE959FF1} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{B30EB219-A015-4385-998B-0EAA94B94C80} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{20EA5F6D-CD6E-47DE-AAAA-F79FD952B094} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{301B4BB3-8F38-4182-A267-ADBFF46A0D09} = {AC6023FB-3F9B-4C6E-8EA3-2ED5D1C3D41E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF2A570C-4C42-47DA-A5C4-65FBCBD6961E}
