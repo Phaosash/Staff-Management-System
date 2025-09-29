@@ -12,6 +12,8 @@ public partial class BindingObject : ObservableObject {
     [ObservableProperty] private string _selectedObjectName = string.Empty;
     [ObservableProperty] private string _newObjectName = string.Empty;
     [ObservableProperty] private string _updatedObjectName = string.Empty;
+    [ObservableProperty] private string _generalFeedback = string.Empty;
+    [ObservableProperty] private string _adminFeedback = string.Empty;
     [ObservableProperty] private SelectableObjects _selectedObject = new();
     [ObservableProperty] private ObservableCollection<SelectableObjects> _selectableObjects = [];
     [ObservableProperty] private IDictionary<int, string>? _readOnlyObject;

@@ -15,8 +15,4 @@
     <ProjectReference Include="..\StaffManager.Manager\StaffManager.Manager.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\" />
-  </ItemGroup>
-
 </Project>
