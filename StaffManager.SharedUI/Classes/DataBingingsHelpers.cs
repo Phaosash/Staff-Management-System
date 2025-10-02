@@ -4,13 +4,13 @@ using StaffManager.SharedUI.DataModels;
 
 namespace StaffManager.SharedUI.Classes;
 
-internal partial class DataBingingsHelpers (BindingObject bindingObject): ObservableObject{
+public partial class DataBingingsHelpers (BindingObject bindingObject): ObservableObject{
     private readonly BindingObject _bindings = bindingObject;
     
     public void ClearSelectedObjectField (FieldsToClear fieldToClear){
         try {
             if (_bindings.SelectedObject == null){
-                UserFeedback.WarningFeedback("Failed to clear the selected field, no object was found");
+                ProvideGeneralWarningFeedback("Failed to clear the selected field, no object was found");
             } else {
                 switch (fieldToClear){
                     case FieldsToClear.IdField:
@@ -22,7 +22,7 @@ internal partial class DataBingingsHelpers (BindingObject bindingObject): Observ
                         _bindings.ShouldFocusObjectNameField = true;
                         break;
                     default:
-                        UserFeedback.WarningFeedback($"Unexpected StaffField value: {fieldToClear}. No action taken.");
+                        ProvideGeneralWarningFeedback($"Unexpected StaffField value: {fieldToClear}. No action taken.");
                         break;
                 }
             }

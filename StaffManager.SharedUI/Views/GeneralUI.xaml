@@ -9,9 +9,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="768" d:DesignWidth="1360">
     <UserControl.InputBindings>
-        <KeyBinding Key="I" Modifiers="Alt" Command="{Binding ClearSelectedIdCommand}" />
-        <KeyBinding Key="N" Modifiers="Alt" Command="{Binding ClearSelectedNameCommand}" />
-        <KeyBinding Key="A" Modifiers="Alt" Command="{Binding OpenNewWindowCommand}" />
+        <KeyBinding Key="I" Modifiers="Alt" Command="{Binding ClearObjectIDCommand}" />
+        <KeyBinding Key="N" Modifiers="Alt" Command="{Binding ClearObjectNameCommand}" />
+        <KeyBinding Key="A" Modifiers="Alt" Command="{Binding OpenAdminWindowCommand}" />
         <KeyBinding Key="L" Modifiers="Alt" Command="{Binding CloseApplicationCommand}" />
     </UserControl.InputBindings>
 
@@ -38,94 +38,116 @@
 
         <!--    Main Content Area   -->
         <Grid Grid.Column="1" Margin="5">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
 
-            <!--    Second Column   -->
-            <Grid Grid.Column="0" Margin="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+            <!--    Main Content Area   -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Staff Contact List" FontSize="18" FontWeight="Bold"
-                           Padding="5" Grid.Row="0"  />
+                <!--    Second Column   -->
+                <Grid Grid.Column="0" Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-                <!--    Read Only List Box  -->
-                <ListBox Grid.Row="1" IsEnabled="False" ItemsSource="{Binding DataBindings.ReadOnlyObject}" />
+                    <TextBlock Text="Staff Contact List" FontSize="18" FontWeight="Bold"
+                               Padding="5" Grid.Row="0"  />
+
+                    <!--    Read Only List Box  -->
+                    <ListBox Grid.Row="1" IsEnabled="False" ItemsSource="{Binding DataBindings.ReadOnlyObject}" />
+                </Grid>
+
+                <!--    Third Column    -->
+                <Grid Grid.Column="1" Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="Search / Filter Data" FontSize="18" FontWeight="Bold"
+                               Padding="5" Grid.Row="0"  />
+
+                    <!--    Search Field    -->
+                    <TextBox Text="{Binding DataBindings.SearchTerm, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
+                             Grid.Row="1" KeyboardNavigation.TabIndex="0" />
+
+                    <!--    ID Fields   -->
+                    <TextBlock Text="ID Number" Margin="0,20,0,0" Grid.Row="2"
+                               FontSize="14" FontWeight="SemiBold" />
+
+                    <!--    Staff ID TextBox    -->
+                    <TextBox Grid.Row="3" Text="{Binding DataBindings.SelectedObjectId}"
+                             classes:FocusBehavior.IsFocused="{Binding DataBindings.ShouldFocusObjectIdField}"
+                             KeyboardNavigation.TabIndex="2" />
+
+                    <!--    Name Fields  -->
+                    <TextBlock Text="Name" Margin="0,20,0,0" Grid.Row="4"
+                               FontSize="14" FontWeight="SemiBold" />
+
+                    <!--    Staff Name TextBox  -->
+                    <TextBox Grid.Row="5" Text="{Binding DataBindings.SelectedObjectName}"
+                             classes:FocusBehavior.IsFocused="{Binding DataBindings.ShouldFocusObjectNameField}"
+                             KeyboardNavigation.TabIndex="3" />
+
+                    <!--    Admin Panel Button  -->
+                    <Button Content="Admin Panel" Grid.Row="6" VerticalAlignment="Top" 
+                            Padding="5" Margin="10" Command="{Binding OpenAdminWindowCommand}"
+                            Cursor="Hand" />
+                </Grid>
+
+                <!--    Fourth Column Content   -->
+                <Grid Grid.Column="2" Margin="5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <!--    Right Side Content      -->
+                    <TextBlock Text="Filtered Staff List" FontSize="18" FontWeight="Bold"
+                               Padding="5" Grid.Row="0"  />
+
+                    <ListBox ItemsSource="{Binding DataBindings.SelectableObjects}" Grid.Row="1"
+                             SelectedItem="{Binding DataBindings.SelectedObjectName}"
+                             KeyboardNavigation.TabNavigation="Cycle"
+                             KeyboardNavigation.TabIndex="1">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding Id}" FontWeight="Bold" Margin="0,0,5,0" />
+                                    <TextBlock Text=": " />
+                                    <TextBlock Text="{Binding Name}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
             </Grid>
 
-            <!--    Third Column    -->
-            <Grid Grid.Column="1" Margin="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+            <!--    Status Panel Area   -->
+            <Grid Grid.Row="1" Margin="5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Search / Filter Data" FontSize="18" FontWeight="Bold"
-                           Padding="5" Grid.Row="0"  />
+                <TextBlock Text="Status: " FontSize="12" Grid.Column="0"
+                           FontWeight="Bold" />
 
-                <!--    Search Field    -->
-                <TextBox Text="{Binding DataBindings.SearchTerm, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
-                           Grid.Row="1" KeyboardNavigation.TabIndex="0" />
-
-                <!--    ID Fields   -->
-                <TextBlock Text="ID Number" Margin="0,20,0,0" Grid.Row="2"
-                   FontSize="14" FontWeight="SemiBold" />
-
-                <!--    Staff ID TextBox    -->
-                <TextBox Grid.Row="3" Text="{Binding DataBindings.SelectedStaffId}"
-                         classes:FocusBehavior.IsFocused="{Binding DataBindings.ShouldFocusIdTextBox}"
-                         KeyboardNavigation.TabIndex="2" />
-
-                <!--    Name Fields  -->
-                <TextBlock Text="Name" Margin="0,20,0,0" Grid.Row="4"
-                           FontSize="14" FontWeight="SemiBold" />
-
-                <!--    Staff Name TextBox  -->
-                <TextBox Grid.Row="5" Text="{Binding DataBindings.SelectedStaffName}"
-                         classes:FocusBehavior.IsFocused="{Binding DataBindings.ShouldFocusNameTextBox}"
-                         KeyboardNavigation.TabIndex="3" />
-
-                <!--    Admin Panel Button  -->
-                <Button Content="Admin Panel" Grid.Row="6" VerticalAlignment="Top" 
-                        Padding="5" Margin="10" Command="{Binding OpenNewWindowCommand}"
-                        Cursor="Hand" />
-            </Grid>
-
-            <!--    Fourth Column Content   -->
-            <Grid Grid.Column="2" Margin="5">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <!--    Right Side Content      -->
-                <TextBlock Text="Filtered Staff List" FontSize="18" FontWeight="Bold"
-                           Padding="5" Grid.Row="0"  />
-
-                <ListBox ItemsSource="{Binding DataBindings.StaffMembers}" Grid.Row="1"
-                         SelectedItem="{Binding DataBindings.SelectedStaffMember}"
-                         KeyboardNavigation.TabNavigation="Cycle"
-                         KeyboardNavigation.TabIndex="1">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Id}" FontWeight="Bold" Margin="0,0,5,0" />
-                                <TextBlock Text=": " />
-                                <TextBlock Text="{Binding Name}" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                <TextBlock Text="{Binding DataBindings.GeneralFeedback}"
+                           FontSize="12" Grid.Column="1" />
             </Grid>
         </Grid>
     </Grid>

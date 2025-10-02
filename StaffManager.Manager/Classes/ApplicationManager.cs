@@ -32,8 +32,12 @@ public class ApplicationManager {
         return DataValidator.MakeSureDeleteIdIsValid(_masterFile, id);
     }
 
-    public bool InitialiseDataUpdate (int id, string name){
-        return DataValidator.ValidateUpdateData(_masterFile, id, name);
+    public bool InitialiseDataUpdate (int? id, string name){
+        if (id != null && name != null){
+            return DataValidator.ValidateUpdateData(_masterFile, id.Value, name);
+        } else {
+            return false;
+        }
     }
 
     private bool InitialiseDataLoad (){
