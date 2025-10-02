@@ -1,6 +1,4 @@
-﻿using StaffManager.Manager.ErrorHandling;
-
-namespace StaffManager.Manager.Classes;
+﻿namespace StaffManager.Manager.Classes;
 
 public class ApplicationManager {
     private IDictionary<int, string> _masterFile;
@@ -23,30 +21,28 @@ public class ApplicationManager {
     }
 
     public bool InitialiseDataSave (){
-        //  TODO: Save logic
-        return true;
+        return DataValidator.SaveableDataValidation(_masterFile);
     }
 
     public bool InitialiseDataInsertion (string nameToInsert){
-        //  TODO: Adding new user
-        return true;
+        return DataValidator.DataInsertionValidation(_masterFile, nameToInsert);
     }
 
     public bool InitialiseDataDeletion (int id){
-        DataValidator.MakeSureDeleteIdIsValid(_masterFile, id);
-        return true;
+        return DataValidator.MakeSureDeleteIdIsValid(_masterFile, id);
     }
 
-    public bool InitialiseDataUpdate (int? id, string name){
-        //  TODO: Data Update
-        return true;
+    public bool InitialiseDataUpdate (int id, string name){
+        return DataValidator.ValidateUpdateData(_masterFile, id, name);
     }
 
-    private void InitialiseDataLoad (){
-        if (DataValidator.DoesApplicationDataExist(_masterFile)){
-            _masterFile = DataValidator.LoadableDataValidation();
+    private bool InitialiseDataLoad (){
+        _masterFile = DataValidator.LoadableDataValidation(_masterFile);
+
+        if (_masterFile.Count > 0){
+            return true;
         } else {
-            _masterFile = new Dictionary<int, string>();
+            return false;
         }
     }
 }
